@@ -5,17 +5,17 @@ import './bootstrap.min.css';
 
 const Start = (props) => {
   return (
-    <div className="container">
-      <div className="card-columns">
-        {props.todos.map((item) => <div className="card">
-          <div class="card-body">
-            <h5 class="card-title">
+    <div className="container-fluid">
+      <div className="d-inline-flex">
+        {props.todos.map((item) => <div key={item.name} className="card m-2">
+          <div className="card-body">
+            <h5 className="card-title">
               {item.name}
             </h5>
             {item.content && !Array.isArray(item.content) && <div className="card-text">{item.content}</div>}
             {item.content && Array.isArray(item.content) && item.content.length > 0 && <div className="card-text">
-              <ul>
-                {item.content.map((todo) => <li>{todo}</li>)}
+              <ul className="pl-3">
+                {item.content.map((todo) => <li key={todo}>{todo}</li>)}
               </ul>
             </div>}
           </div>
@@ -48,7 +48,7 @@ class App extends Component {
             <Link to="/archive" className="nav-link">Archive</Link>
             <Link to="/about" className="nav-link">About</Link>
           </nav>
-          <main>
+          <main className="mt-4">
             <Route path="/" exact render={(props) => <Start {...props} todos={this.state.todos} />} />
             <Route path="/about" exact component={About} />
 
