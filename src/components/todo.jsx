@@ -2,11 +2,17 @@ import React from 'react';
 import './todo.scss';
 
 const CardTodo = ({ todo }) => {
+    let colorEditing = false;
+    const editColor = () => {
+        colorEditing = !colorEditing;
+        console.log(colorEditing);
+    };
+
     return (
         <div className="todo-card card m-2">
-            <div className="select-button" role="button">&#965;</div>
-            <div className="card-body">
-                <div className="card-title h5" contentEditable="true" aria-multiline="true">
+            <div className="select-button" role="button"><i class="mdi mdi-check"></i></div>
+            <div className="card-body mb-2">
+                <div className="card-title mt-2 h5" contentEditable="true" aria-multiline="true">
                     {todo.name}
                 </div>
                 {todo.content && !Array.isArray(todo.content) &&
@@ -18,9 +24,9 @@ const CardTodo = ({ todo }) => {
                 </div>}
             </div>
             <div className="card-footer">
-                <button className="btn todo-card-action">Edit</button>
-                <button className="btn todo-card-action">Delete</button>
-                <button className="btn todo-card-action">Archive</button>
+                <button aria-label="Color" onClick={() => editColor()} className="btn todo-card-action"><i class="mdi mdi-brush"></i></button>
+                <button aria-label="Delete" className="btn todo-card-action"><i class="mdi mdi-delete"></i></button>
+                <button aria-label="Archive" className="btn todo-card-action"><i class="mdi mdi-archive"></i></button>
             </div>
         </div>
     );
