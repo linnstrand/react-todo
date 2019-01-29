@@ -6,10 +6,11 @@ const CardTodo = ({ todo }) => {
         <div className="todo-card card m-2">
             <div className="select-button" role="button">&#965;</div>
             <div className="card-body">
-                <h5 className="card-title">
+                <div className="card-title h5" contentEditable="true" aria-multiline="true">
                     {todo.name}
-                </h5>
-                {todo.content && !Array.isArray(todo.content) && <div role="textbox" contentEditable="true" className="card-text">{todo.content}</div>}
+                </div>
+                {todo.content && !Array.isArray(todo.content) &&
+                    <div role="textbox" contentEditable="true" aria-multiline="true" className="card-text card-editable">{todo.content}</div>}
                 {todo.content && Array.isArray(todo.content) && todo.content.length > 0 && <div className="card-text">
                     <ul className="pl-3">
                         {todo.content.map((todo) => <li key={todo}>{todo}</li>)}

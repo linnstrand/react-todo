@@ -3,7 +3,7 @@ import CardTodo from '../components/todo';
 
 const Home = (props) => {
     return (
-        <div className="d-inline-flex">
+        <div className="d-inline-flex align-items-start">
             {props.todos.map((item) => <CardTodo key={item.name} todo={item} className="shadow-sm card m-2" />)}
         </div>
 
