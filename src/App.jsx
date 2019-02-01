@@ -10,7 +10,7 @@ const App = () => (
     <div className="App">
       <nav className="nav">
         <Link to="/" className="nav-link">Home</Link>
-        <Link to="/todos" className="nav-link">ToDos</Link>
+        <Link to="/todos" className="nav-link">ToDos ()</Link>
         <Link to="/archive" className="nav-link">Archive</Link>
         <Link to="/about" className="nav-link">About</Link>
       </nav>
