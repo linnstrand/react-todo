@@ -1,25 +1,49 @@
 import React from 'react'
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button';
+import PropTypes from 'prop-types'
 
 
-const ColorEditer = ({editState}) => (
-    <Modal show={editState.editing}>
-        <Modal.Header closeButton>
-            <Modal.Title>Edit Color of {editState.name}</Modal.Title>
-        </Modal.Header>
-
-        <Modal.Body>
-            <p>Modal body text goes here.</p>
-        </Modal.Body>
-
-        <Modal.Footer>
-            <Button variant="secondary">Close</Button>
-            <Button variant="primary">Save changes</Button>
-        </Modal.Footer>
-    </Modal>
-)
+class ColorEditer extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { color: props.editState.color || '#FFFFFF' }
+    }
 
 
+    handleChange = (event) => {
+        this.setState({ color: event.target.value });
+    }
+
+    render() {
+        const editState = this.props.editState;
+        const { color } = this.state;
+        return (
+            <Modal show={editState.editing}>
+                <Modal.Header closeButton onHide={editState.cancelEdit}>
+                    <Modal.Title>Color</Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <form onSubmit={e => e.preventDefault}>
+                        <label>Edit Color of {editState.name}</label>
+                        <input type="color" value={color} onChange={this.handleChange} />
+                    </form>
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <Button onClick={this.props.cancelEdit} variant="secondary">Close</Button>
+                    <Button onClick={() => this.props.saveEdit(color)} variant="primary">Save changes</Button>
+                </Modal.Footer>
+            </Modal>
+        )
+    }
+}
+
+ColorEditer.propTypes = {
+    cancelEdit: PropTypes.func,
+    saveEdit: PropTypes.func,
+    editState: PropTypes.object,
+}
 export default ColorEditer;
 

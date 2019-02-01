@@ -10,7 +10,7 @@ export const editColor = name => ({
     name
 })
 
-export const toggleEdit = toggleState => ({
-    type: 'TOGGLE_EDIT',
+export const cancelEdit = toggleState => ({
+    type: 'CANCEL_EDIT',
     toggleState
 })
