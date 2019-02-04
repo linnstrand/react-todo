@@ -41,37 +41,38 @@ class TodoNew extends React.Component {
 
 	render() {
 		return (
-			<div className='d-inline-flex'>
-				<form className='todo-card card'>
-					<div className='card-body'>
-						<input
-							type='text'
-							name='title'
-							id='title'
-							className='card-title h5 mb-0 d-block'
-							autoComplete='off'
-							placeholder='Note title'
-							onChange={this.onChange}
-						/>
-						<textarea
-							name='content'
-							id='content'
-							cols='30'
-							rows='3'
-							className='card-text card-editable'
-							placeholder='Write a note!'
-							onChange={this.onChange}
-						/>
-					</div>
-					<div className='card-footer'>
-						<button aria-label='Color' onClick={event => this.saveTodo(event)} className='btn todo-card-action'>
-							<i className='mdi mdi-content-save' />
-						</button>
-						<button aria-label='Delete' onClick={() => this.cancelTodo()} className='btn todo-card-action'>
-							<i className='mdi mdi-delete' />
-						</button>
-					</div>
-				</form>
+			<div className='d-inline-flex card todo-card new-todo-card'>
+				<div
+					role='textbox'
+					contentEditable='true'
+					suppressContentEditableWarning='true'
+					aria-multiline='true'
+					id='title'
+					className='new-todo-title'
+					onChange={this.onChange}>
+					Title
+				</div>
+				<div
+					role='textbox'
+					contentEditable='true'
+					suppressContentEditableWarning='true'
+					aria-multiline='true'
+					id='content'
+					className='new-todo-content'
+					onChange={this.onChange}>
+					Write a note!
+				</div>
+				{this.state.name ||
+					(this.state.content && (
+						<div className='card-footer'>
+							<button aria-label='Color' onClick={event => this.saveTodo(event)} className='btn todo-card-action'>
+								<i className='mdi mdi-content-save' />
+							</button>
+							<button aria-label='Delete' onClick={() => this.cancelTodo()} className='btn todo-card-action'>
+								<i className='mdi mdi-delete' />
+							</button>
+						</div>
+					))}
 			</div>
 		);
 	}

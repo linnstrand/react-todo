@@ -8,17 +8,12 @@ const CardTodo = ({ todo, setColor, deleteTodo }) => (
 			<i className='mdi mdi-check' />
 		</div>
 		<div className='card-body mb-2'>
-			<div className='card-title h5' contentEditable='true' aria-multiline='true' suppressContentEditableWarning='true'>
-				{todo.name}
-			</div>
+			<h4 className='card-title h5'>{todo.name}</h4>
 			{todo.content &&
 			!Array.isArray(todo.content) && (
 				<div
 					role='textbox'
-					contentEditable='true'
-					suppressContentEditableWarning='true'
-					aria-multiline='true'
-					className='card-text card-editable'>
+					className='card-text'>
 					{todo.content}
 				</div>
 			)}
