@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types'
 import './todo.scss';
 
-const CardTodo = ({ todo, editColor }) => (
-    <div className="todo-card card m-2">
+const CardTodo = ({ todo, editColor, deleteTodo }) => (
+    <div className="todo-card card m-2" style={{ backgroundColor: todo.color }}>
         <div className="select-button" role="button"><i className="mdi mdi-check"></i></div>
         <div className="card-body mb-2">
             <div className="card-title mt-2 h5" contentEditable="true" aria-multiline="true" suppressContentEditableWarning="true">
@@ -19,7 +19,7 @@ const CardTodo = ({ todo, editColor }) => (
         </div>
         <div className="card-footer">
             <button aria-label="Color" onClick={() => editColor(todo.name)} className="btn todo-card-action"><i className="mdi mdi-brush"></i></button>
-            <button aria-label="Delete" className="btn todo-card-action"><i className="mdi mdi-delete"></i></button>
+            <button aria-label="Delete" onClick={() => deleteTodo(todo.name)} className="btn todo-card-action"><i className="mdi mdi-delete"></i></button>
             <button aria-label="Archive" className="btn todo-card-action"><i className="mdi mdi-archive"></i></button>
         </div>
     </div>
@@ -28,7 +28,8 @@ const CardTodo = ({ todo, editColor }) => (
 
 CardTodo.propTypes = {
     todo: PropTypes.object.isRequired,
-    editColor: PropTypes.func.isRequired
+    editColor: PropTypes.func.isRequired,
+    deleteTodo: PropTypes.func.isRequired
 }
 
 export default CardTodo;

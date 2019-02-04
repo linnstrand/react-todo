@@ -33,7 +33,7 @@ class ColorEditer extends React.Component {
 
                 <Modal.Footer>
                     <Button onClick={this.props.cancelEdit} variant="secondary">Close</Button>
-                    <Button onClick={() => this.props.saveEdit(color)} variant="primary">Save changes</Button>
+                    <Button onClick={() => this.props.saveEdit(editState.name, color)} variant="primary">Save changes</Button>
                 </Modal.Footer>
             </Modal>
         )

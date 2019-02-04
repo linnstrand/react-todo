@@ -1,6 +1,7 @@
 const initialState = {
     editing: false,
-    type: ''
+    type: '',
+    name: ''
 }
 
 
