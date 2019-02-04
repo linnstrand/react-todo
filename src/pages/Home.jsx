@@ -3,7 +3,7 @@ import { editColor, cancelEdit, setColor, deleteTodo } from '../actions';
 import TodoNew from '../components/Todo/TodoNew';
 import CardTodo from '../components/Todo/Todo';
 import { connect } from 'react-redux';
-import ColorEditer from '../components/ColorEditer';
+import Editer from '../components/Editer';
 
 const mapStateToProps = state => ({
 	todos: state.todos,
@@ -19,22 +19,17 @@ const mapDispatchToProps = dispatch => {
 	};
 };
 
-const Home = ({ todos, editState, editColor, cancelEdit, deleteTodo, setColor }) => {
-	const saveEdit = (name, hex) => {
-		setColor(name, hex);
-		cancelEdit();
-	};
-
+const Home = ({ todos, editState, cancelEdit, deleteTodo, setColor }) => {
 	return (
 		<React.Fragment>
 			<h3>{editState.name}</h3>
 			<div className='d-inline-flex align-items-start flex-wrap'>
 				{todos.map(item => (
-					<CardTodo key={item.name} todo={item} editColor={editColor} deleteTodo={deleteTodo} className='shadow-sm card m-2' />
+					<CardTodo key={item.name} todo={item} setColor={setColor} deleteTodo={deleteTodo} className='shadow-sm card m-2' />
 				))}
 			</div>
 			<TodoNew />
-			<ColorEditer editState={editState} cancelEdit={() => cancelEdit()} saveEdit={saveEdit} />
+			<Editer editState={editState} cancelEdit={() => cancelEdit()} />
 		</React.Fragment>
 	);
 };

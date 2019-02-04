@@ -8,7 +8,10 @@ const initialState = [
 const todos = (state = initialState, action) => {
 	switch (action.type) {
 		case Constants.ADD_TODO:
-			return state.concat(action.payload);
+			if (!todoExists(action.payload.name, state)) {
+				return state.concat(action.payload);
+			}
+			return state;
 		case Constants.DELETE_TODO:
 			return state.filter(todo => todo.name !== action.payload);
 
@@ -23,5 +26,7 @@ const todos = (state = initialState, action) => {
 			return state;
 	}
 };
+
+const todoExists = (name, state) => state.filter(todo => todo.name === name).length > 0;
 
 export default todos;

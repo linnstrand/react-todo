@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './todo.scss';
 
-const CardTodo = ({ todo, editColor, deleteTodo }) => (
+const CardTodo = ({ todo, setColor, deleteTodo }) => (
 	<div className='todo-card card m-2' style={{ backgroundColor: todo.color }}>
 		<div className='select-button' role='button'>
 			<i className='mdi mdi-check' />
@@ -31,10 +31,18 @@ const CardTodo = ({ todo, editColor, deleteTodo }) => (
 			)}
 		</div>
 		<div className='card-footer'>
-			<button aria-label='Color' onClick={() => editColor(todo.name)} className='btn todo-card-action'>
+			<label className='btn todo-card-action' htmlFor='colorEdit'>
 				<i className='mdi mdi-brush' />
-			</button>
-			<button type="button" aria-label='Delete' onClick={() => deleteTodo(todo.name)} className='btn todo-card-action'>
+			</label>
+			<input
+				className='d-none'
+				name='colorEdit'
+				id='colorEdit'
+				type='color'
+				value={todo.color || '#FFFFFF'}
+				onChange={event => setColor(todo.name, event.target.value)}
+			/>
+			<button type='button' aria-label='Delete' onClick={() => deleteTodo(todo.name)} className='btn todo-card-action'>
 				<i className='mdi mdi-delete' />
 			</button>
 			<button aria-label='Archive' className='btn todo-card-action'>
@@ -46,7 +54,7 @@ const CardTodo = ({ todo, editColor, deleteTodo }) => (
 
 CardTodo.propTypes = {
 	todo: PropTypes.object.isRequired,
-	editColor: PropTypes.func.isRequired,
+	setColor: PropTypes.func.isRequired,
 	deleteTodo: PropTypes.func.isRequired
 };
 
