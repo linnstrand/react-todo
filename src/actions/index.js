@@ -1,26 +1,26 @@
-import { ADD_TODO } from '../constants/action-types';
+import * as Constants from '../constants/action-types';
 
 export const addTodo = payload => ({
-    type: ADD_TODO,
+    type: Constants.ADD_TODO,
     payload
 })
 
 export const deleteTodo = payload => ({
-    type: 'DELETE_TODO',
+    type:  Constants.DELETE_TODO,
     payload
 })
 
 export const setColor = payload => ({
-    type: 'SET_COLOR',
+    type:  Constants.SET_COLOR,
     payload
 })
 
 export const editColor = name => ({
-    type: 'EDIT_COLOR',
+    type:  Constants.EDIT_COLOR,
     name
 })
 
 export const cancelEdit = toggleState => ({
-    type: 'CANCEL_EDIT',
+    type:  Constants.CANCEL_EDIT,
     toggleState
 })
