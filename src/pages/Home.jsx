@@ -29,6 +29,12 @@ const Home = ({ todos, editState, editColor, cancelEdit, deleteTodo, setColor })
             {todos.map((item) =>
                 <CardTodo key={item.name} todo={item} editColor={editColor} deleteTodo={deleteTodo} className="shadow-sm card m-2" />)}
         </div>
+        <div className="new-note">
+            <form className="d-inline-flex flex-column">
+                <input type="text" name="newTitle" id="newTitle" className="card-title h5 mb-0" autoComplete="off" placeholder="Note title" />
+                <textarea name="newContent" id="newContent" cols="30" rows="3" className="card-text card-editable" placeholder="Write a note!"></textarea>
+            </form>
+        </div>
         <ColorEditer editState={editState} cancelEdit={() => cancelEdit()} saveEdit={saveEdit} />
     </React.Fragment>
     )
