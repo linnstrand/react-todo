@@ -9,12 +9,14 @@ const mapDispatchToProps = dispatch => {
 };
 
 class TodoNew extends React.Component {
+	lastTitle = '';
 	constructor(props) {
 		super(props);
 		this.state = {
 			name: '',
-			content: ''
+			content: '',
 		};
+		this.titleInput = React.createRef();
 	}
 
 	saveTodo = e => {
@@ -24,44 +26,38 @@ class TodoNew extends React.Component {
 	cancelTodo = () => {
 		console.log();
 	};
-	onChange = event => {
-		const key = event.target.id;
-		const value = event.target.value;
-		switch (key) {
-			case 'title':
-				this.setState({ name: value });
-				break;
-			case 'content':
-				this.setState({ content: value });
-				break;
-			default:
-				break;
+
+	emitChange = () => {
+		const text = this.titleInput.current.textContent;
+		if (text !== this.state.name) {
+			this.setState({ name: text });
 		}
 	};
 
 	render() {
 		return (
 			<div className='d-inline-flex card todo-card new-todo-card'>
+				{/* {!this.state.name && <div className='position-absolute new-todo-text'>Title</div>} */}
 				<div
 					role='textbox'
 					contentEditable='true'
 					suppressContentEditableWarning='true'
 					aria-multiline='true'
 					id='title'
-					className='new-todo-title'
-					onChange={this.onChange}>
-					Title
-				</div>
+					className='new-todo-title new-todo-text'
+					onInput={this.emitChange}
+					onBlur={this.emitChange}
+					ref={this.titleInput}
+				/>
+				{!this.state.content && <div className='position-absolute stuck-bottom new-todo-text'>Write a note!</div>}
 				<div
 					role='textbox'
 					contentEditable='true'
 					suppressContentEditableWarning='true'
 					aria-multiline='true'
 					id='content'
-					className='new-todo-content'
-					onChange={this.onChange}>
-					Write a note!
-				</div>
+					className='new-todo-content new-todo-text'
+				/>
 				{this.state.name ||
 					(this.state.content && (
 						<div className='card-footer'>

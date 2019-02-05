@@ -22,7 +22,7 @@ const mapDispatchToProps = dispatch => {
 const Home = ({ todos, editState, cancelEdit, deleteTodo, setColor }) => {
 	return (
 		<React.Fragment>
-			<TodoNew />
+			<div className="m-2"><TodoNew /></div>
 			<div className='d-inline-flex align-items-start flex-wrap'>
 				{todos.map(item => (
 					<CardTodo key={item.name} todo={item} setColor={setColor} deleteTodo={deleteTodo} className='shadow-sm card m-2' />

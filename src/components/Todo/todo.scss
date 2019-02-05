@@ -20,9 +20,14 @@
 .card-text {
 	padding: 0.25rem 1.25rem;
 }
+
 .card-title {
 	margin-bottom: 0;
 	line-height: 2rem;
+}
+
+.card-text {
+	font-size: .875rem;
 }
 
 .todo-card-action {
@@ -75,12 +80,22 @@
 
 .new-todo-card {
 	min-width: 350px;
-	margin-bottom: 1.15rem;
+	margin-bottom: .5rem;
 }
 
-.new-todo-title,
-.new-todo-content {
+.new-todo-content, .new-todo-title {
+	&:focus {
+		background-color: white;
+		z-index: 10;
+	}
+}
+
+.new-todo-text {
 	font-size: .875rem;
 	line-height: 1.25rem;
 	padding: 0.25rem 0.75rem;
+}
+
+.stuck-bottom {
+	bottom: 0;
 }

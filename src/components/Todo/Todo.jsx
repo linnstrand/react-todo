@@ -11,9 +11,7 @@ const CardTodo = ({ todo, setColor, deleteTodo }) => (
 			<h4 className='card-title h5'>{todo.name}</h4>
 			{todo.content &&
 			!Array.isArray(todo.content) && (
-				<div
-					role='textbox'
-					className='card-text'>
+				<div role='textbox' className='card-text'>
 					{todo.content}
 				</div>
 			)}
