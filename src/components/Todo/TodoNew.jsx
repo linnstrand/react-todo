@@ -55,18 +55,6 @@ class TodoNew extends React.Component {
 						onChange={(name, value) => this.onChange(name, value)}
 					/>
 				</div>
-
-				{this.state.name &&
-					(this.state.content && (
-						<div className='card-footer'>
-							<button aria-label='Color' onClick={event => this.saveTodo(event)} className='btn todo-card-action'>
-								<i className='mdi mdi-content-save' />
-							</button>
-							<button aria-label='Delete' onClick={() => this.cancelTodo()} className='btn todo-card-action'>
-								<i className='mdi mdi-delete' />
-							</button>
-						</div>
-					))}
 			</div>
 		);
 	}

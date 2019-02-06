@@ -22,13 +22,13 @@ export default class TodoInput extends Component {
 	render() {
 		return (
 			<React.Fragment>
-				{!this.state.value && <div className='position-absolute new-todo-text'>{this.props.placeholder}</div>}
+				{!this.state.value && <div className='position-absolute new-todo-text todo-placeholder'>{this.props.placeholder}</div>}
 				<div
 					role='textbox'
 					contentEditable='true'
 					suppressContentEditableWarning='true'
 					aria-multiline='true'
-					className='new-todo-text'
+					className='new-todo-text new-todo-content'
 					onInput={this.emitChange}
 					onBlur={this.emitChange}
 					ref={this.inputRef}
@@ -38,8 +38,8 @@ export default class TodoInput extends Component {
 	}
 
 	static propTypes = {
-		todoInput: PropTypes.string.Required,
+		todoInput: PropTypes.string.isRequired,
 		placeholder: PropTypes.string,
-		onChange: PropTypes.func.Required
+		onChange: PropTypes.func.isRequired
 	};
 }
