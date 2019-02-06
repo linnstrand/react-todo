@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { addTodo } from '../../actions/index';
+import TodoInput from './TodoInput';
 
 const mapDispatchToProps = dispatch => {
 	return {
@@ -14,51 +15,48 @@ class TodoNew extends React.Component {
 		super(props);
 		this.state = {
 			name: '',
-			content: '',
+			content: ''
 		};
-		this.titleInput = React.createRef();
 	}
 
 	saveTodo = e => {
 		e.preventDefault();
 		this.props.addTodo(this.state);
+		this.setState({
+			name: '',
+			content: ''
+		});
 	};
 	cancelTodo = () => {
 		console.log();
 	};
-
-	emitChange = () => {
-		const text = this.titleInput.current.textContent;
-		if (text !== this.state.name) {
-			this.setState({ name: text });
-		}
+	onChange = (name, value) => {
+		this.setState({
+			[name]: value
+		});
 	};
 
 	render() {
 		return (
 			<div className='d-inline-flex card todo-card new-todo-card'>
-				{/* {!this.state.name && <div className='position-absolute new-todo-text'>Title</div>} */}
-				<div
-					role='textbox'
-					contentEditable='true'
-					suppressContentEditableWarning='true'
-					aria-multiline='true'
-					id='title'
-					className='new-todo-title new-todo-text'
-					onInput={this.emitChange}
-					onBlur={this.emitChange}
-					ref={this.titleInput}
-				/>
-				{!this.state.content && <div className='position-absolute stuck-bottom new-todo-text'>Write a note!</div>}
-				<div
-					role='textbox'
-					contentEditable='true'
-					suppressContentEditableWarning='true'
-					aria-multiline='true'
-					id='content'
-					className='new-todo-content new-todo-text'
-				/>
-				{this.state.name ||
+				<div className='new-todo-title new-todo-text'>
+					<TodoInput
+						name={'name'}
+						todoInput={this.state.name}
+						placeholder={'Title'}
+						onChange={(name, value) => this.onChange(name, value)}
+					/>
+				</div>
+				<div className='new-todo-text'>
+					<TodoInput
+						name={'content'}
+						todoInput={this.state.content}
+						placeholder={'Write a note!'}
+						onChange={(name, value) => this.onChange(name, value)}
+					/>
+				</div>
+
+				{this.state.name &&
 					(this.state.content && (
 						<div className='card-footer'>
 							<button aria-label='Color' onClick={event => this.saveTodo(event)} className='btn todo-card-action'>
