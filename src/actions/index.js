@@ -5,6 +5,11 @@ export const addTodo = payload => ({
     payload
 })
 
+export const updateTodo = payload => ({
+    type: Constants.UPDATE_TODO,
+    payload
+})
+
 export const deleteTodo = payload => ({
     type:  Constants.DELETE_TODO,
     payload

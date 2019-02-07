@@ -12,10 +12,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => {
 	return {
-		editColor: name => dispatch(editColor(name)),
-		deleteTodo: name => dispatch(deleteTodo(name)),
+		editColor: id => dispatch(editColor(id)),
+		deleteTodo: id => dispatch(deleteTodo(id)),
 		cancelEdit: () => dispatch(cancelEdit()),
-		setColor: (name, hex) => dispatch(setColor({ name, hex }))
+		setColor: (id, hex) => dispatch(setColor({ id, hex }))
 	};
 };
 
@@ -25,7 +25,7 @@ const Home = ({ todos, editState, cancelEdit, deleteTodo, setColor }) => {
 			<div className="m-2"><TodoNew /></div>
 			<div className='d-inline-flex align-items-start flex-wrap'>
 				{todos.map(item => (
-					<CardTodo key={item.name} todo={item} setColor={setColor} deleteTodo={deleteTodo} className='shadow-sm card m-2' />
+					<CardTodo key={item.id} todo={item} setColor={setColor} deleteTodo={deleteTodo} className='shadow-sm card m-2' />
 				))}
 			</div>
 			<Editer editState={editState} cancelEdit={() => cancelEdit()} />

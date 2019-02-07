@@ -19,6 +19,10 @@ export default class TodoInput extends Component {
 		}
 	};
 
+	emitBlur = () => {
+		this.props.onBlur(this.props.name);
+	};
+
 	render() {
 		return (
 			<React.Fragment>
@@ -30,7 +34,7 @@ export default class TodoInput extends Component {
 					aria-multiline='true'
 					className='new-todo-text new-todo-content'
 					onInput={this.emitChange}
-					onBlur={this.emitChange}
+					onBlur={this.emitBlur}
 					ref={this.inputRef}
 				/>
 			</React.Fragment>
@@ -38,7 +42,6 @@ export default class TodoInput extends Component {
 	}
 
 	static propTypes = {
-		todoInput: PropTypes.string.isRequired,
 		placeholder: PropTypes.string,
 		onChange: PropTypes.func.isRequired
 	};

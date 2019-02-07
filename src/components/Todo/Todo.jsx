@@ -33,13 +33,10 @@ const CardTodo = ({ todo, setColor, deleteTodo }) => (
 				id='colorEdit'
 				type='color'
 				value={todo.color || '#FFFFFF'}
-				onChange={event => setColor(todo.name, event.target.value)}
+				onChange={event => setColor(todo.id, event.target.value)}
 			/>
-			<button type='button' aria-label='Delete' onClick={() => deleteTodo(todo.name)} className='btn todo-card-action'>
+			<button type='button' aria-label='Delete' onClick={() => deleteTodo(todo.id)} className='btn todo-card-action'>
 				<i className='mdi mdi-delete' />
-			</button>
-			<button aria-label='Archive' className='btn todo-card-action'>
-				<i className='mdi mdi-archive' />
 			</button>
 		</div>
 	</div>

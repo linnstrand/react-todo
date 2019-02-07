@@ -1,23 +1,32 @@
 import * as Constants from '../constants/action-types';
 
 const initialState = [
-	{ name: 'Shopping', content: [ 'Chicken', 'Yogurt', 'Milk', 'Potatoes' ] },
-	{ name: 'Book Hair Appointment', content: 'Soon!' }
+	{ id: 1, name: 'Shopping', content: [ 'Chicken', 'Yogurt', 'Milk', 'Potatoes' ] },
+	{ id: 2, name: 'Book Hair Appointment', content: 'Soon!' }
 ];
 
 const todos = (state = initialState, action) => {
 	switch (action.type) {
 		case Constants.ADD_TODO:
-			if (!todoExists(action.payload.name, state)) {
-				return state.concat(action.payload);
+			if (!todoExists(action.payload.id, state)) {
+				let todo = action.payload;
+				todo.id = state.length + 2;
+				return [todo].concat(state);
 			}
 			return state;
+		case Constants.UPDATE_TODO:
+			return state.map(todo => {
+				if (todo.id === action.payload.id) {
+					return Object.assign({}, state, action.payload);
+				}
+				return todo;
+			});
 		case Constants.DELETE_TODO:
-			return state.filter(todo => todo.name !== action.payload);
+			return state.filter(todo => todo.id !== action.payload);
 
 		case Constants.SET_COLOR:
 			return state.map(todo => {
-				if (todo.name === action.payload.name) {
+				if (todo.id === action.payload.id) {
 					todo.color = action.payload.hex;
 				}
 				return todo;
@@ -27,6 +36,6 @@ const todos = (state = initialState, action) => {
 	}
 };
 
-const todoExists = (name, state) => state.filter(todo => todo.name === name).length > 0;
+const todoExists = (id, state) => state.filter(todo => todo.id === id).length > 0;
 
 export default todos;

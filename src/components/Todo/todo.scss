@@ -81,6 +81,7 @@
 .new-todo-card {
 	min-width: 350px;
 	margin-bottom: .5rem;
+	flex-direction: row;
 }
 
 .new-todo-content {
@@ -89,6 +90,17 @@
 		background-color: white;
 		z-index: 10;
 	}
+}
+.new-todo-body {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+}
+
+.new-todo-menu {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 }
 
 .new-todo-text {
@@ -100,4 +112,11 @@
 .todo-placeholder {
 	font-weight: bold;
 	color: grey;
+	pointer-events: none;
+}
+
+.todo-icon-button {
+    padding: 2px 5px;
+    font-size: 1.4rem;
+    line-height: 1;
 }
