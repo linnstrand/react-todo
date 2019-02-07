@@ -1,5 +1,4 @@
 import React from 'react';
-import { editColor, cancelEdit, setColor, deleteTodo } from '../actions';
 import TodoNew from '../components/Todo/TodoNew';
 import CardTodo from '../components/Todo/Todo';
 import { connect } from 'react-redux';
@@ -7,30 +6,21 @@ import Editer from '../components/Editer';
 
 const mapStateToProps = state => ({
 	todos: state.todos,
-	editState: state.editState
+	editing: state.editing
 });
 
-const mapDispatchToProps = dispatch => {
-	return {
-		editColor: id => dispatch(editColor(id)),
-		deleteTodo: id => dispatch(deleteTodo(id)),
-		cancelEdit: () => dispatch(cancelEdit()),
-		setColor: (id, hex) => dispatch(setColor({ id, hex }))
-	};
-};
-
-const Home = ({ todos, editState, cancelEdit, deleteTodo, setColor }) => {
+const Home = ({ todos, editing }) => {
 	return (
 		<React.Fragment>
-			<div className="m-2"><TodoNew /></div>
-			<div className='d-inline-flex align-items-start flex-wrap'>
-				{todos.map(item => (
-					<CardTodo key={item.id} todo={item} setColor={setColor} deleteTodo={deleteTodo} className='shadow-sm card m-2' />
-				))}
+			<div className='m-2'>
+				<TodoNew />
 			</div>
-			<Editer editState={editState} cancelEdit={() => cancelEdit()} />
+			<div className='d-inline-flex align-items-start flex-wrap'>
+				{todos.map(item => <CardTodo key={item.id} todo={item} className='shadow-sm card m-2' />)}
+			</div>
+			{editing.on && <Editer />}
 		</React.Fragment>
 	);
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(mapStateToProps)(Home);

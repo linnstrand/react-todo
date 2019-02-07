@@ -1,13 +1,24 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { editColor, startEdit, setColor, deleteTodo } from '../../actions';
+import { connect } from 'react-redux';
 import './todo.scss';
 
-const CardTodo = ({ todo, setColor, deleteTodo }) => (
+const mapDispatchToProps = dispatch => {
+	return {
+		editColor: id => dispatch(editColor(id)),
+		deleteTodo: id => dispatch(deleteTodo(id)),
+		setColor: (id, hex) => dispatch(setColor({ id, hex })),
+		startEdit: todo => dispatch(startEdit(todo))
+	};
+};
+
+const CardTodo = ({ todo, deleteTodo, setColor, startEdit }) => (
 	<div className='todo-card card m-2' style={{ backgroundColor: todo.color }}>
 		<div className='select-button' role='button'>
 			<i className='mdi mdi-check' />
 		</div>
-		<div className='card-body mb-2'>
+		<div className='card-body mb-2' onClick={() => startEdit(todo)}>
 			<h4 className='card-title h5'>{todo.name}</h4>
 			{todo.content &&
 			!Array.isArray(todo.content) && (
@@ -43,9 +54,7 @@ const CardTodo = ({ todo, setColor, deleteTodo }) => (
 );
 
 CardTodo.propTypes = {
-	todo: PropTypes.object.isRequired,
-	setColor: PropTypes.func.isRequired,
-	deleteTodo: PropTypes.func.isRequired
+	todo: PropTypes.object.isRequired
 };
 
-export default CardTodo;
+export default connect(null, mapDispatchToProps)(CardTodo);

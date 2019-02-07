@@ -1,44 +1,50 @@
 import React from 'react';
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
-import PropTypes from 'prop-types';
+import { saveEdit, cancelEdit } from '../actions';
+import { connect } from 'react-redux';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-class Editer extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = { name: props.name, content: props.content };
-	}
+const mapStateToProps = state => ({
+	editing: state.editing
+});
 
-	handleChange = event => {
-		this.setState({ color: event.target.value });
+const mapDispatchToProps = dispatch => {
+	return {
+		saveEdit: a => dispatch(saveEdit(a)),
+		cancelEdit: () => dispatch(cancelEdit())
 	};
-
-	render() {
-		const editState = this.props.editState;
-		return (
-			<Modal show={editState.editing}>
-				<Modal.Header closeButton onHide={editState.cancelEdit}>
-					<Modal.Title>Color</Modal.Title>
-				</Modal.Header>
-
-				<Modal.Body />
-
-				<Modal.Footer>
-					<Button onClick={this.props.cancelEdit} variant='secondary'>
-						Close
-					</Button>
-					<Button onClick={() => this.props.saveEdit(editState)} variant='primary'>
-						Save changes
-					</Button>
-				</Modal.Footer>
-			</Modal>
-		);
-	}
-}
-
-Editer.propTypes = {
-	cancelEdit: PropTypes.func,
-	saveEdit: PropTypes.func,
-	editState: PropTypes.object
 };
-export default Editer;
+
+const Editer = ({ editing, cancelEdit, saveEdit }) => {
+	const todo = editing.target;
+	return (
+		<div>
+			<Modal isOpen={editing.on}>
+				<ModalHeader toggle={cancelEdit}>
+					<div className='card-title h5' contentEditable='true' aria-multiline='true' suppressContentEditableWarning='true'>
+						{todo.name}
+					</div>
+				</ModalHeader>
+				<ModalBody>
+					<div
+						role='textbox'
+						contentEditable='true'
+						suppressContentEditableWarning='true'
+						aria-multiline='true'
+						className='card-text card-editable'>
+						{todo.content}
+					</div>
+				</ModalBody>
+				<ModalFooter>
+					<Button color='primary' onClick={() => saveEdit(todo)}>
+						Save
+					</Button>{' '}
+					<Button color='secondary' onClick={cancelEdit}>
+						Cancel
+					</Button>
+				</ModalFooter>
+			</Modal>
+		</div>
+	);
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Editer);

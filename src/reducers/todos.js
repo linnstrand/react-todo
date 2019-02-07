@@ -38,14 +38,7 @@ const todos = (state = initialState, action) => {
 			return UpdateTodo(state, action.payload);
 		case Constants.DELETE_TODO:
 			return DeleteTodo(state, action.payload);
-
 		case Constants.SET_COLOR:
-			// return state.map(todo => {
-			// 	if (todo.id === action.payload.id) {
-			// 		todo.color = action.payload.hex;
-			// 	}
-			// 	return todo;
-			// });
 			return SetTodoColor(state, action.payload);
 		default:
 			return state;

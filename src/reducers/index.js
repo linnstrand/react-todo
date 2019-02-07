@@ -1,10 +1,10 @@
 import { combineReducers } from 'redux';
 import todos from './todos'
-import editState from './editState'
+import editing from './editing'
 
 const rootReducer = combineReducers({
     todos,
-    editState
+    editing
 })
 
 export default rootReducer;
