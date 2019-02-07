@@ -24,13 +24,13 @@ const CardTodo = ({ todo, setColor, deleteTodo }) => (
 			)}
 		</div>
 		<div className='card-footer'>
-			<label className='btn todo-card-action' htmlFor='colorEdit'>
+			<label className='btn todo-card-action' htmlFor={'colorEdit' + todo.id}>
 				<i className='mdi mdi-brush' />
 			</label>
 			<input
 				className='d-none'
-				name='colorEdit'
-				id='colorEdit'
+				name={'colorEdit' + todo.id}
+				id={'colorEdit' + todo.id}
 				type='color'
 				value={todo.color || '#FFFFFF'}
 				onChange={event => setColor(todo.id, event.target.value)}

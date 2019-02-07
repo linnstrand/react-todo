@@ -19,7 +19,6 @@ const TodoNew = ({ addTodo, updateTodo }) => {
 
 	const onBlur = () => {
 		todo.id ? updateTodo(todo) : addTodo(todo);
-		console.log('saved');
 	};
 
 	const onChange = (name, value) => {
