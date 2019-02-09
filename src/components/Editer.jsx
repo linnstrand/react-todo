@@ -20,7 +20,7 @@ const Editer = ({ editing, cancelEdit, saveEdit }) => {
 		<div>
 			<Modal isOpen={editing.on}>
 				<ModalHeader toggle={cancelEdit}>
-					<div className='card-title h5' contentEditable='true' aria-multiline='true' suppressContentEditableWarning='true'>
+					<div className='card-title h5' contentEditable='true' suppressContentEditableWarning='true'>
 						{todo.name}
 					</div>
 				</ModalHeader>

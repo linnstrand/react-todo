@@ -33,7 +33,7 @@
 .todo-card-action {
 	color: #333;
 	color: #333;
-	padding: 0.15rem 0.5rem;
+	padding: 0.15rem 0.25rem;
 	line-height: 1.5rem;
 	font-size: 1.5rem;
 	&:hover {
@@ -49,9 +49,16 @@
 	padding: 0.25rem;
 	height: 2.5rem;
 	display: flex;
+	justify-content: space-between;
+	.btn-light {
+		font-size: 0.875rem;
+		padding: .25rem .5rem;
+	}
 }
 
 .todo-card {
+	color: #4c4c4c;
+	margin: 0.5rem;
 	box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075);
 	&:hover {
 		box-shadow: 0 .25rem 1rem rgba(0, 0, 0, .15);
@@ -62,20 +69,30 @@
 			display: inline;
 		}
 	}
+	&.is-editing {
+		box-shadow: 0 0.125rem 10rem 10px rgba(0, 0, 0, 0.075);
 
-	input,
-	textarea {
-		border: none;
-		width: 100%;
-		height: 100%;
+		.card-title {
+			color: black;
+		}
+		.card-text {
+			color: black;
+			font-weight: 500;
+		}
+	}
+	&.is-checked {
+		color: blue;
+		.select-button {
+			background-color: blue;
+			display: inline;
+		}
 	}
 }
-
-.todo-card {
-	box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075);
-	&:hover {
-		box-shadow: 0 .25rem 1rem rgba(0, 0, 0, .15);
-	}
+input,
+textarea {
+	border: none;
+	width: 100%;
+	height: 100%;
 }
 
 .new-todo-card {
@@ -109,6 +126,11 @@
 	padding: 0.25rem 0.75rem;
 }
 
+.new-todo-title {
+	font-weight: bold;
+	color: black;
+}
+
 .todo-placeholder {
 	font-weight: bold;
 	color: grey;
@@ -116,7 +138,7 @@
 }
 
 .todo-icon-button {
-    padding: 2px 5px;
-    font-size: 1.4rem;
-    line-height: 1;
+	padding: 2px 5px;
+	font-size: 1.4rem;
+	line-height: 1;
 }

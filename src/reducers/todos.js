@@ -2,7 +2,7 @@ import * as Constants from '../constants/action-types';
 
 const initialState = [
 	{ id: 1, name: 'Shopping', content: [ 'Chicken', 'Yogurt', 'Milk', 'Potatoes' ] },
-	{ id: 2, name: 'Book Hair Appointment', content: 'Soon!', color: 'blue' }
+	{ id: 2, name: 'Book Hair Appointment', content: 'Soon!' }
 ];
 
 const UpdateObject = (oldObject, newValues) => Object.assign({}, oldObject, newValues);
