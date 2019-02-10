@@ -36,7 +36,6 @@ class CardTodo extends Component {
 	onChange = (name, value) => {
 		let changed = Object.assign({}, this.state.todo);
 		changed[name] = value;
-		// this.setState({ todo: changed });
 		this.setState({ isChanged: this.isChanged(changed), todo: changed });
 	};
 
@@ -50,6 +49,13 @@ class CardTodo extends Component {
 
 	checkTodo() {
 		this.setState({ checked: !this.state.checked });
+	}
+
+	handleChange = (event) => {
+		let changed = Object.assign({}, this.state.todo);
+		changed[event.target.name] = event.target.value;
+		this.setState({ isChanged: this.isChanged(changed), todo: changed });
+		this.setState({ value: event.target.value });
 	}
 
 	render() {
@@ -70,13 +76,14 @@ class CardTodo extends Component {
 						onBlur={() => console.log('blurred')}
 					/>
 					{!Array.isArray(todo.content) && (
-						<TodoInput
-							name={'content'}
-							todoInput={todo.content}
-							stylingClasses={'card-text'}
-							onChange={(name, value) => this.onChange(name, value)}
-							onBlur={() => console.log('blurred')}
-						/>
+						// <TodoInput
+						// 	name={'content'}
+						// 	todoInput={todo.content}
+						// 	stylingClasses={'card-text'}
+						// 	onChange={(name, value) => this.onChange(name, value)}
+						// 	onBlur={() => console.log('blurred')}
+						// />
+						<textarea name='content' id={'content' + todo.id} value={todo.content} onChange={this.handleChange} />
 					)}
 					{Array.isArray(todo.content) &&
 					todo.content.length > 0 && (
