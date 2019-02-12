@@ -1,20 +1,10 @@
 import * as Constants from '../constants/action-types';
+import { UpdateObjectInArray, UpdateObject } from './util';
 
 const initialState = [
 	{ id: 1, name: 'Shopping', content: [ 'Chicken', 'Yogurt', 'Milk', 'Potatoes' ] },
 	{ id: 2, name: 'Book Hair Appointment', content: 'Soon!' }
 ];
-
-const UpdateObject = (oldObject, newValues) => Object.assign({}, oldObject, newValues);
-
-const UpdateObjectInArray = (oldArray, itemId, callback) => {
-	return oldArray.map(item => {
-		if (item.id !== itemId) {
-			return item;
-		}
-		return callback(item);
-	});
-};
 
 // const ObjectExists = (itemId, oldArray) => oldArray.filter(item => item.id === itemId).length > 0;
 

@@ -16,7 +16,9 @@ const Home = ({ todos, editing }) => {
 				<TodoNew />
 			</div>
 			<div className='d-inline-flex align-items-start flex-wrap'>
-				{todos.map(item => <CardTodo key={item.id} todo={item} className='shadow-sm card m-2' />)}
+				{todos.map(item => (
+					<CardTodo key={item.id} todo={item} checked={editing.checked.includes(item.id)} className='shadow-sm card m-2' />
+				))}
 			</div>
 			{editing.on && <Editer />}
 		</React.Fragment>

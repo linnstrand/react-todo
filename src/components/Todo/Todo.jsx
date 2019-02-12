@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { editColor, setColor, deleteTodo, updateTodo } from '../../actions';
+import { editColor, setColor, deleteTodo, updateTodo, cancelEdit, toggleChecked } from '../../actions';
 import { connect } from 'react-redux';
 import ContentEditable from 'react-contenteditable';
 import './todo.scss';
@@ -10,70 +10,85 @@ const mapDispatchToProps = dispatch => {
 		editColor: id => dispatch(editColor(id)),
 		deleteTodo: id => dispatch(deleteTodo(id)),
 		setColor: (id, hex) => dispatch(setColor({ id, hex })),
-		updateTodo: todo => dispatch(updateTodo(todo))
+		updateTodo: todo => dispatch(updateTodo(todo)),
+		toggleChecked: id => dispatch(toggleChecked(id)),
+		cancelEdit: () => dispatch(cancelEdit())
 	};
 };
 
 class CardTodo extends Component {
 	constructor(props) {
 		super(props);
-
+		this.myRef = React.createRef();
+		this.handleClickOutside = this.handleClickOutside.bind(this);
 		this.state = {
-			todo: this.props.todo,
 			originalTodo: Object.assign({}, this.props.todo),
-			isChanged: false,
 			activeClass: '',
-			checked: false
+			isChanged: false
 		};
 	}
+
+	componentDidMount() {
+		document.addEventListener('mousedown', this.handleClickOutside);
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener('mousedown', this.handleClickOutside);
+	}
+
+	handleClickOutside = e => {
+		if (this.state.activeClass && !this.myRef.current.contains(e.target)) {
+			this.onClose();
+		}
+	};
+
+	handleClickInside = () => this.setState({ clickedOutside: false });
 
 	isChanged = todo => todo.name !== this.state.originalTodo.name || todo.content !== this.state.originalTodo.content;
 
 	onClose = () => {
 		this.setState({ activeClass: '' });
+		this.props.cancelEdit();
 	};
 
 	onCancel = () => {
-		this.setState({ todo: Object.assign({}, this.state.originalTodo) });
+		this.props.updateTodo(this.state.originalTodo);
+		this.onClose();
+		this.setState({ isChanged: false });
 	};
 
 	activateEdit = () => {
 		this.setState({ activeClass: ' is-editing' });
 	};
 
-	checkTodo() {
-		this.setState({ checked: !this.state.checked });
-	}
-
 	handleChange = (event, field) => {
-		let changed = Object.assign({}, this.state.todo);
+		let changed = Object.assign({}, this.props.todo);
 		changed[field] = event.target.value;
-		this.setState({ isChanged: this.isChanged(changed), todo: changed });
-		this.setState({ changed: event.target.value });
+		this.setState({ isChanged: this.isChanged(changed) });
+		this.props.updateTodo(changed);
 	};
 
 	render() {
-		let todo = this.state.todo;
+		let todo = this.props.todo;
 		return (
 			<div
-				className={'todo-card card' + this.state.activeClass + (this.state.checked ? ' is-checked' : '')}
+				ref={this.myRef}
+				className={'todo-card card' + this.state.activeClass + (this.props.checked ? ' is-checked' : '')}
 				style={{ backgroundColor: todo.color }}>
-				<div className={'select-button'} role='button' aria-label='Check Todo' onClick={() => this.checkTodo()}>
+				<div
+					className={'select-button'}
+					role='button'
+					aria-label='Check Todo'
+					onClick={() => this.props.toggleChecked(this.props.todo.id)}>
 					<i className='mdi mdi-check' />
 				</div>
 				<div className='card-body mb-2' onClick={this.activateEdit}>
-					<ContentEditable
-						html={todo.name}
-						className={'card-title h5'}
-						onChange={event => this.handleChange(event, 'name')}
-						onBlur={() => console.log('blurred')}
-					/>
+					<ContentEditable html={todo.name} className={'card-title h5'} onChange={event => this.handleChange(event, 'name')} />
 					{!Array.isArray(todo.content) && (
 						<ContentEditable
 							html={todo.content}
 							className={'card-text'}
 							onChange={event => this.handleChange(event, 'content')}
-							onBlur={() => console.log('blurred')}
 						/>
 					)}
 					{Array.isArray(todo.content) &&

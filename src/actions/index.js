@@ -1,5 +1,6 @@
 import * as Constants from '../constants/action-types';
 
+// Todos
 export const addTodo = payload => ({
 	type: Constants.ADD_TODO,
 	payload
@@ -25,6 +26,11 @@ export const editColor = name => ({
 	name
 });
 
+export const resetTodo  = payload => ({
+	type: Constants.RESET_TODO,
+	payload
+});
+
 // Editing
 export const startEdit = payload => ({
 	type: Constants.START_EDIT,
@@ -38,5 +44,10 @@ export const saveEdit = payload => ({
 
 export const cancelEdit = payload => ({
 	type: Constants.CANCEL_EDIT,
+	payload
+});
+
+export const toggleChecked = payload => ({
+	type: Constants.TOGGLE_CHECKED,
 	payload
 });
