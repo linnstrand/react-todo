@@ -25,10 +25,11 @@ const AddTodo = (oldArray, newObject) => {
 
 const UpdateTodo = (state, todo) => UpdateObjectInArray(state, todo.id, oldItem => UpdateObject(oldItem, todo));
 const DeleteTodo = (state, itemId) => state.filter(todo => todo.id !== itemId);
-const SetTodoColor = (state, todo) =>
-	UpdateObjectInArray(state, todo.id, oldItem => {
+const SetTodoColor = (state, todo) => {
+	return UpdateObjectInArray(state, todo.id, oldItem => {
 		return UpdateObject(oldItem, { color: todo.hex });
 	});
+};
 
 const todos = (state = initialState, action) => {
 	switch (action.type) {

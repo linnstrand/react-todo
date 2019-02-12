@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { editColor, setColor, deleteTodo, updateTodo } from '../../actions';
 import { connect } from 'react-redux';
-import TodoInput from './TodoInput';
+import ContentEditable from 'react-contenteditable';
 import './todo.scss';
 
 const mapDispatchToProps = dispatch => {
@@ -33,12 +33,6 @@ class CardTodo extends Component {
 		this.setState({ activeClass: '' });
 	};
 
-	onChange = (name, value) => {
-		let changed = Object.assign({}, this.state.todo);
-		changed[name] = value;
-		this.setState({ isChanged: this.isChanged(changed), todo: changed });
-	};
-
 	onCancel = () => {
 		this.setState({ todo: Object.assign({}, this.state.originalTodo) });
 	};
@@ -51,12 +45,12 @@ class CardTodo extends Component {
 		this.setState({ checked: !this.state.checked });
 	}
 
-	handleChange = (event) => {
+	handleChange = (event, field) => {
 		let changed = Object.assign({}, this.state.todo);
-		changed[event.target.name] = event.target.value;
+		changed[field] = event.target.value;
 		this.setState({ isChanged: this.isChanged(changed), todo: changed });
-		this.setState({ value: event.target.value });
-	}
+		this.setState({ changed: event.target.value });
+	};
 
 	render() {
 		let todo = this.state.todo;
@@ -68,22 +62,19 @@ class CardTodo extends Component {
 					<i className='mdi mdi-check' />
 				</div>
 				<div className='card-body mb-2' onClick={this.activateEdit}>
-					<TodoInput
-						name={'name'}
-						todoInput={todo.name}
-						stylingClasses={'card-title h5'}
-						onChange={(name, value) => this.onChange(name, value)}
+					<ContentEditable
+						html={todo.name}
+						className={'card-title h5'}
+						onChange={event => this.handleChange(event, 'name')}
 						onBlur={() => console.log('blurred')}
 					/>
 					{!Array.isArray(todo.content) && (
-						// <TodoInput
-						// 	name={'content'}
-						// 	todoInput={todo.content}
-						// 	stylingClasses={'card-text'}
-						// 	onChange={(name, value) => this.onChange(name, value)}
-						// 	onBlur={() => console.log('blurred')}
-						// />
-						<textarea name='content' id={'content' + todo.id} value={todo.content} onChange={this.handleChange} />
+						<ContentEditable
+							html={todo.content}
+							className={'card-text'}
+							onChange={event => this.handleChange(event, 'content')}
+							onBlur={() => console.log('blurred')}
+						/>
 					)}
 					{Array.isArray(todo.content) &&
 					todo.content.length > 0 && (
@@ -94,18 +85,23 @@ class CardTodo extends Component {
 				</div>
 				<div className='card-footer'>
 					<div className='d-inline-flex'>
-						<label className='btn todo-card-action' htmlFor={'colorEdit' + todo.id}>
+						<label className='btn todo-card-action'>
 							<i className='mdi mdi-brush' />
+							<input
+								className='d-none'
+								name={'colorEdit' + todo.id}
+								id={'colorEdit' + todo.id}
+								type='color'
+								value={todo.color || '#FFFFFF'}
+								onChange={event => this.props.setColor(todo.id, event.target.value)}
+							/>
 						</label>
-						<input
-							className='d-none'
-							name={'colorEdit' + todo.id}
-							id={'colorEdit' + todo.id}
-							type='color'
-							value={todo.color || '#FFFFFF'}
-							onChange={event => setColor(todo.id, event.target.value)}
-						/>
-						<button type='button' aria-label='Delete' onClick={() => deleteTodo(todo.id)} className='btn todo-card-action'>
+
+						<button
+							type='button'
+							aria-label='Delete'
+							onClick={() => this.props.deleteTodo(todo.id)}
+							className='btn todo-card-action'>
 							<i className='mdi mdi-delete' />
 						</button>
 						{this.state.isChanged && (
