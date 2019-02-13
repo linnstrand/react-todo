@@ -24,12 +24,14 @@ class CardTodo extends Component {
 		this.state = {
 			originalTodo: Object.assign({}, this.props.todo),
 			activeClass: '',
-			isChanged: false
+			isChanged: false,
+			hasBullets: false
 		};
 	}
 
 	componentDidMount() {
 		document.addEventListener('mousedown', this.handleClickOutside);
+		this.setState({ hasBullets: this.isBulletList(this.props.todo.content) })
 	}
 
 	componentWillUnmount() {
@@ -68,6 +70,29 @@ class CardTodo extends Component {
 		this.props.updateTodo(changed);
 	};
 
+	setBullet = () => {
+		let todo = Object.assign({}, this.props.todo);
+		let content = this.props.todo.content;
+		if (this.isBulletList(content)) {
+			content = content.replace(/(<ul>||<\/ul>)+/g, '');
+			content = content.replace(/li>+/g, 'div>');
+		} else {
+			content = content.replace(/div>+/g, 'li>');
+			if (!content.startsWith('<li>')) {
+				content = `<li>${content}</li>`;
+			}
+			content = `<ul>${content}</ul>`;
+		}
+		todo.content = content;
+		this.props.updateTodo(todo);
+		// let lineBreakSplit = todo.content.split(',');
+		// let commaSplit = todo.content.split(',');
+	}
+
+	isBulletList(content) {
+		return content.includes('<li>');
+	}
+
 	render() {
 		let todo = this.props.todo;
 		return (
@@ -84,19 +109,11 @@ class CardTodo extends Component {
 				</div>
 				<div className='card-body mb-2' onClick={this.activateEdit}>
 					<ContentEditable html={todo.name} className={'card-title h5'} onChange={event => this.handleChange(event, 'name')} />
-					{!Array.isArray(todo.content) && (
-						<ContentEditable
-							html={todo.content}
-							className={'card-text'}
-							onChange={event => this.handleChange(event, 'content')}
-						/>
-					)}
-					{Array.isArray(todo.content) &&
-					todo.content.length > 0 && (
-						<div className='card-text'>
-							<ul className='pl-3'>{todo.content.map(todo => <li key={todo}>{todo}</li>)}</ul>
-						</div>
-					)}
+					<ContentEditable
+						html={todo.content}
+						className={'card-text'}
+						onChange={event => this.handleChange(event, 'content')}
+					/>
 				</div>
 				<div className='card-footer'>
 					<div className='d-inline-flex'>
@@ -111,7 +128,9 @@ class CardTodo extends Component {
 								onChange={event => this.props.setColor(todo.id, event.target.value)}
 							/>
 						</label>
-
+						<button type='button' aria-label='Bulet Points' onClick={this.setBullet} className='btn todo-card-action'>
+							<i className='mdi mdi-format-list-bulleted' />
+						</button>
 						<button
 							type='button'
 							aria-label='Delete'
