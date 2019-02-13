@@ -66,9 +66,13 @@ class CardTodo extends Component {
 	handleChange = (event, field) => {
 		let changed = Object.assign({}, this.props.todo);
 		changed[field] = event.target.value;
-		this.setState({ isChanged: this.isChanged(changed) });
-		this.props.updateTodo(changed);
+		this.changeUpdates(changed);
 	};
+
+	changeUpdates(changed) {
+		this.setState({ isChanged: this.isChanged(changed), hasBullets: this.isBulletList(changed.content) });
+		this.props.updateTodo(changed);
+	}
 
 	setBullet = () => {
 		let todo = Object.assign({}, this.props.todo);
@@ -84,9 +88,7 @@ class CardTodo extends Component {
 			content = `<ul>${content}</ul>`;
 		}
 		todo.content = content;
-		this.props.updateTodo(todo);
-		// let lineBreakSplit = todo.content.split(',');
-		// let commaSplit = todo.content.split(',');
+		this.changeUpdates(todo);
 	}
 
 	isBulletList(content) {
@@ -128,7 +130,7 @@ class CardTodo extends Component {
 								onChange={event => this.props.setColor(todo.id, event.target.value)}
 							/>
 						</label>
-						<button type='button' aria-label='Bulet Points' onClick={this.setBullet} className='btn todo-card-action'>
+						<button type='button' aria-label='Bullet Points' onClick={this.setBullet} className={'btn todo-card-action' + (this.state.hasBullets ? ' bullets-active' : '')}>
 							<i className='mdi mdi-format-list-bulleted' />
 						</button>
 						<button
