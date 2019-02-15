@@ -25,9 +25,22 @@ class CardTodo extends Component {
 			originalTodo: Object.assign({}, this.props.todo),
 			activeClass: '',
 			isChanged: false,
-			hasBullets: false
+			hasBullets: false,
+			visibleColor: false
 		};
 	}
+
+	colors = [
+		{ name: 'orange', hex: '#ffeed1' },
+		{ name: 'pink', hex: '#ffd6e1' },
+		{ name: 'purple', hex: '#f3d1ff' },
+		{ name: 'yellow', hex: '#fdffd1' },
+		{ name: 'green', hex: '#daffd1' },
+		{ name: 'teal', hex: '#cdf7f3' },
+		{ name: 'blue', hex: '#d1d8ff' },
+		{ name: 'blue-grey', hex: '#ced1e0' },
+		{ name: 'grey', hex: '#f8f9fa' }
+	]
 
 	componentDidMount() {
 		document.addEventListener('mousedown', this.handleClickOutside);
@@ -119,18 +132,10 @@ class CardTodo extends Component {
 				</div>
 				<div className='card-footer'>
 					<div className='d-inline-flex'>
-						<label className='btn todo-card-action'>
+						<button type="button" className='todo-card-action' onClick={() => this.setState({ visibleColor: !this.state.visibleColor })}>
 							<i className='mdi mdi-brush' />
-							<input
-								className='d-none'
-								name={'colorEdit' + todo.id}
-								id={'colorEdit' + todo.id}
-								type='color'
-								value={todo.color || '#FFFFFF'}
-								onChange={event => this.props.setColor(todo.id, event.target.value)}
-							/>
-						</label>
-						<button type='button' aria-label='Bullet Points' onClick={this.setBullet} className={'btn todo-card-action' + (this.state.hasBullets ? ' bullets-active' : '')}>
+						</button>
+						<button type='button' aria-label='Bullet Points' onClick={this.setBullet} className={'todo-card-action' + (this.state.hasBullets ? ' bullets-active' : '')}>
 							<i className='mdi mdi-format-list-bulleted' />
 						</button>
 						<button
@@ -141,7 +146,7 @@ class CardTodo extends Component {
 							<i className='mdi mdi-delete' />
 						</button>
 						{this.state.isChanged && (
-							<button type='button' aria-label='Undo' onClick={this.onCancel} className='btn todo-card-action'>
+							<button type='button' aria-label='Undo' onClick={this.onCancel} className='todo-card-action'>
 								<i className='mdi mdi-undo' />
 							</button>
 						)}
@@ -151,6 +156,18 @@ class CardTodo extends Component {
 							Close
 						</button>
 					)}
+				</div>
+				<div className={'shadow-sm color-options ' + (this.state.visibleColor ? 'visible' : 'invisible')}>
+					{this.colors.map(color => {
+						const styling = {
+							borderColor: color.hex,
+							backgroundColor: color.hex
+						}
+						return (
+							<button key={color.hex} className="color-button" title={color.name} style={styling} onClick={() => this.props.setColor(todo.id, color.hex)} aria-label={color.name}>
+							</button>
+						)
+					})}
 				</div>
 			</div>
 		);
