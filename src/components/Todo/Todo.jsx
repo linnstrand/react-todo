@@ -114,7 +114,8 @@ class CardTodo extends Component {
 			<div
 				ref={this.myRef}
 				className={'todo-card card' + this.state.activeClass + (this.props.checked ? ' is-checked' : '')}
-				style={{ backgroundColor: todo.color }}>
+				style={{ backgroundColor: todo.color }}
+				onMouseLeave={() => this.setState({ visibleColor: false })}>
 				<div
 					className={'select-button'}
 					role='button'
@@ -122,7 +123,7 @@ class CardTodo extends Component {
 					onClick={() => this.props.toggleChecked(this.props.todo.id)}>
 					<i className='mdi mdi-check' />
 				</div>
-				<div className='card-body mb-2' onClick={this.activateEdit}>
+				<div className='card-body' onClick={this.activateEdit}>
 					<ContentEditable html={todo.name} className={'card-title h5'} onChange={event => this.handleChange(event, 'name')} />
 					<ContentEditable
 						html={todo.content}
@@ -132,7 +133,7 @@ class CardTodo extends Component {
 				</div>
 				<div className='card-footer'>
 					<div className='d-inline-flex'>
-						<button type="button" className='todo-card-action' onClick={() => this.setState({ visibleColor: !this.state.visibleColor })}>
+						<button type="button" className='todo-card-action' onMouseEnter={() => this.setState({ visibleColor: true })}>
 							<i className='mdi mdi-brush' />
 						</button>
 						<button type='button' aria-label='Bullet Points' onClick={this.setBullet} className={'todo-card-action' + (this.state.hasBullets ? ' bullets-active' : '')}>
