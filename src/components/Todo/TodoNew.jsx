@@ -1,37 +1,35 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { addTodo, updateTodo } from '../../actions/index';
-import TodoInput from './TodoInput';
+import { addTodo } from '../../actions/index';
+import ContentEditable from 'react-contenteditable';
 
 const mapDispatchToProps = dispatch => {
 	return {
-		addTodo: name => dispatch(addTodo(name)),
-		updateTodo: name => dispatch(updateTodo(name))
+		addTodo: todo => dispatch(addTodo(todo)),
 	};
 };
 
 class TodoNew extends Component {
 	constructor(props) {
 		super(props);
-
 		this.state = {
-			todo: {},
 			newTodo: {}
 		};
 	}
 
-	cancelTodo = () => {
-		this.setState({ todo: {} });
+	onSave = () => {
+		this.props.addTodo(this.state.newTodo);
+		this.onCancel();
 	};
 
-	onBlur = () => {
-		this.setState({ todo: Object.assign({}, this.state.todo) });
-		this.state.todo.id ? updateTodo(this.state.todo) : addTodo(this.state.todo);
-	};
-	onChange = (name, value) => {
-		let t = Object.assign({}, this.state.todo);
-		t[name] = value;
-		this.setState({ newTodo: t });
+	onCancel() {
+		this.setState({ newTodo: {} });
+	}
+
+	handleChange = (event, field) => {
+		let changed = Object.assign({}, this.state.newTodo);
+		changed[field] = event.target.value;
+		this.setState({ newTodo: changed });
 	};
 
 	render() {
@@ -40,33 +38,23 @@ class TodoNew extends Component {
 				<div className='new-todo-body'>
 					<div className='new-todo-title new-todo-text'>
 						{!this.state.newTodo.name && <div className='position-absolute new-todo-text todo-placeholder'>Title</div>}
-						<TodoInput
-							name={'name'}
-							todoInput={this.state.todo.name}
-							stylingClasses={'new-todo-text new-todo-title'}
-							onChange={(name, value) => this.onChange(name, value)}
-							onBlur={(name, value) => this.onBlur(name, value)}
-						/>
+						<ContentEditable html={this.state.newTodo.name || ''} className={'new-todo-text new-todo-title'}
+							onChange={event => this.handleChange(event, 'name')} />
 					</div>
 					<div className='new-todo-text'>
 						{!this.state.newTodo.content && (
 							<div className='position-absolute new-todo-text todo-placeholder'>Write a note!</div>
 						)}
-						<TodoInput
-							name={'content'}
-							todoInput={this.state.todo.content}
-							stylingClasses={'new-todo-text new-todo-content'}
-							onChange={(name, value) => this.onChange(name, value)}
-							onBlur={() => this.onBlur()}
-						/>
+						<ContentEditable html={this.state.newTodo.content || ''} className={'new-todo-text new-todo-content'}
+							onChange={event => this.handleChange(event, 'content')} />
 					</div>
 				</div>
-				{this.state.todo.content && (
+				{this.state.newTodo.content && (
 					<div className='new-todo-menu'>
-						<button aria-label='Discard' className='btn todo-icon-button' onCLick={this.cancelTodo}>
+						<button aria-label='Discard' className='btn todo-icon-button' onClick={this.onCancel}>
 							<i className='mdi mdi-delete' />
 						</button>
-						<button aria-label='Save' className='btn todo-icon-button'>
+						<button aria-label='Save' className='btn todo-icon-button' onClick={this.onSave}>
 							<i className='mdi mdi-content-save' />
 						</button>
 					</div>

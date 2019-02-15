@@ -51,12 +51,12 @@ class CardTodo extends Component {
 	onClose = () => {
 		this.setState({ activeClass: '' });
 		this.props.cancelEdit();
+		this.setState({ isChanged: false });
 	};
 
 	onCancel = () => {
-		this.props.updateTodo(this.state.originalTodo);
+		this.changeUpdates(this.state.originalTodo);
 		this.onClose();
-		this.setState({ isChanged: false });
 	};
 
 	activateEdit = () => {
