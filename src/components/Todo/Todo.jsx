@@ -4,6 +4,8 @@ import { editColor, setColor, deleteTodo, updateTodo, cancelEdit, toggleChecked 
 import { connect } from 'react-redux';
 import ContentEditable from 'react-contenteditable';
 import './todo.scss';
+import { setBullet } from './todoService';
+import { COLORS } from '../../constants/colors';
 
 const mapDispatchToProps = dispatch => {
 	return {
@@ -25,26 +27,12 @@ class CardTodo extends Component {
 			originalTodo: Object.assign({}, this.props.todo),
 			activeClass: '',
 			isChanged: false,
-			hasBullets: false,
 			visibleColor: false
 		};
 	}
 
-	colors = [
-		{ name: 'orange', hex: '#ffeed1' },
-		{ name: 'pink', hex: '#ffd6e1' },
-		{ name: 'purple', hex: '#f3d1ff' },
-		{ name: 'yellow', hex: '#fdffd1' },
-		{ name: 'green', hex: '#daffd1' },
-		{ name: 'teal', hex: '#cdf7f3' },
-		{ name: 'blue', hex: '#d1d8ff' },
-		{ name: 'blue-grey', hex: '#ced1e0' },
-		{ name: 'grey', hex: '#f8f9fa' }
-	]
-
 	componentDidMount() {
 		document.addEventListener('mousedown', this.handleClickOutside);
-		this.setState({ hasBullets: this.isBulletList(this.props.todo.content) })
 	}
 
 	componentWillUnmount() {
@@ -83,30 +71,15 @@ class CardTodo extends Component {
 	};
 
 	changeUpdates(changed) {
-		this.setState({ isChanged: this.isChanged(changed), hasBullets: this.isBulletList(changed.content) });
+		changed.hasBullets = changed.content.includes('<li>');
+		this.setState({ isChanged: this.isChanged(changed) });
 		this.props.updateTodo(changed);
 	}
 
-	setBullet = () => {
-		let todo = Object.assign({}, this.props.todo);
-		let content = this.props.todo.content;
-		if (this.isBulletList(content)) {
-			content = content.replace(/(<ul>||<\/ul>)+/g, '');
-			content = content.replace(/li>+/g, 'div>');
-		} else {
-			content = content.replace(/div>+/g, 'li>');
-			if (!content.startsWith('<li>')) {
-				content = `<li>${content}</li>`;
-			}
-			content = `<ul>${content}</ul>`;
-		}
-		todo.content = content;
+	toggleBullets = () => {
+		let todo = setBullet(this.props.todo);
 		this.changeUpdates(todo);
-	}
-
-	isBulletList(content) {
-		return content.includes('<li>');
-	}
+	};
 
 	render() {
 		let todo = this.props.todo;
@@ -125,18 +98,18 @@ class CardTodo extends Component {
 				</div>
 				<div className='card-body' onClick={this.activateEdit}>
 					<ContentEditable html={todo.name} className={'card-title h5'} onChange={event => this.handleChange(event, 'name')} />
-					<ContentEditable
-						html={todo.content}
-						className={'card-text'}
-						onChange={event => this.handleChange(event, 'content')}
-					/>
+					<ContentEditable html={todo.content} className={'card-text'} onChange={event => this.handleChange(event, 'content')} />
 				</div>
 				<div className='card-footer'>
 					<div className='d-inline-flex'>
-						<button type="button" className='todo-card-action' onMouseEnter={() => this.setState({ visibleColor: true })}>
+						<button type='button' className='todo-card-action' onMouseEnter={() => this.setState({ visibleColor: true })}>
 							<i className='mdi mdi-brush' />
 						</button>
-						<button type='button' aria-label='Bullet Points' onClick={this.setBullet} className={'todo-card-action' + (this.state.hasBullets ? ' bullets-active' : '')}>
+						<button
+							type='button'
+							aria-label='Bullet Points'
+							onClick={this.toggleBullets}
+							className={'todo-card-action' + (todo.hasBullets ? ' bullets-active' : '')}>
 							<i className='mdi mdi-format-list-bulleted' />
 						</button>
 						<button
@@ -159,15 +132,21 @@ class CardTodo extends Component {
 					)}
 				</div>
 				<div className={'shadow-sm color-options ' + (this.state.visibleColor ? 'visible' : 'invisible')}>
-					{this.colors.map(color => {
+					{COLORS.map(color => {
 						const styling = {
 							borderColor: color.hex,
 							backgroundColor: color.hex
-						}
+						};
 						return (
-							<button key={color.hex} className="color-button" title={color.name} style={styling} onClick={() => this.props.setColor(todo.id, color.hex)} aria-label={color.name}>
-							</button>
-						)
+							<button
+								key={color.hex}
+								className='color-button'
+								title={color.name}
+								style={styling}
+								onClick={() => this.props.setColor(todo.id, color.hex)}
+								aria-label={color.name}
+							/>
+						);
 					})}
 				</div>
 			</div>

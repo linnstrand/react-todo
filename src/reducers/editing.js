@@ -1,5 +1,5 @@
 import * as Constants from '../constants/action-types';
-import { UpdateObjectInArray, UpdateObject } from './util';
+import { UpdateObject } from './util';
 
 const initial = {
 	on: false,
