@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { editColor, setColor, deleteTodo, updateTodo, cancelEdit, toggleChecked } from '../../actions';
+import { editColor, setColor, deleteTodo, updateTodo, cancelEdit, toggleChecked, startEdit } from '../../actions';
 import { connect } from 'react-redux';
 import ContentEditable from 'react-contenteditable';
 import './todo.scss';
@@ -14,20 +14,20 @@ const mapDispatchToProps = dispatch => {
 		setColor: (id, hex) => dispatch(setColor({ id, hex })),
 		updateTodo: todo => dispatch(updateTodo(todo)),
 		toggleChecked: id => dispatch(toggleChecked(id)),
-		cancelEdit: () => dispatch(cancelEdit())
+		cancelEdit: () => dispatch(cancelEdit()),
+		startEdit: id => dispatch(startEdit(id))
 	};
 };
 
-class CardTodo extends Component {
+class Todo extends Component {
 	constructor(props) {
 		super(props);
 		this.myRef = React.createRef();
 		this.handleClickOutside = this.handleClickOutside.bind(this);
 		this.state = {
 			originalTodo: Object.assign({}, this.props.todo),
-			activeClass: '',
 			isChanged: false,
-			visibleColor: false
+			visibleColor: false,
 		};
 	}
 
@@ -40,37 +40,30 @@ class CardTodo extends Component {
 	}
 
 	handleClickOutside = e => {
-		if (this.state.activeClass && !this.myRef.current.contains(e.target)) {
-			this.onClose();
+		if (this.props.isActive && !this.myRef.current.contains(e.target)) {
+			this.onDone();
 		}
 	};
 
-	handleClickInside = () => this.setState({ clickedOutside: false });
-
 	isChanged = todo => todo.name !== this.state.originalTodo.name || todo.content !== this.state.originalTodo.content;
 
-	onClose = () => {
-		this.setState({ activeClass: '' });
+	onDone = () => {
 		this.props.cancelEdit();
 		this.setState({ isChanged: false });
 	};
 
 	onCancel = () => {
-		this.changeUpdates(this.state.originalTodo);
-		this.onClose();
-	};
-
-	activateEdit = () => {
-		this.setState({ activeClass: ' is-editing' });
+		this.updateTodo(this.state.originalTodo);
+		this.onDone();
 	};
 
 	handleChange = (event, field) => {
 		let changed = Object.assign({}, this.props.todo);
 		changed[field] = event.target.value;
-		this.changeUpdates(changed);
+		this.updateTodo(changed);
 	};
 
-	changeUpdates(changed) {
+	updateTodo(changed) {
 		changed.hasBullets = changed.content.includes('<li>');
 		this.setState({ isChanged: this.isChanged(changed) });
 		this.props.updateTodo(changed);
@@ -78,7 +71,7 @@ class CardTodo extends Component {
 
 	toggleBullets = () => {
 		let todo = setBullet(this.props.todo);
-		this.changeUpdates(todo);
+		this.updateTodo(todo);
 	};
 
 	render() {
@@ -86,7 +79,7 @@ class CardTodo extends Component {
 		return (
 			<div
 				ref={this.myRef}
-				className={'todo-card card' + this.state.activeClass + (this.props.checked ? ' is-checked' : '')}
+				className={'todo-card card' + (this.props.isActive ? ' is-editing' : '') + (this.props.checked ? ' is-checked' : '')}
 				style={{ backgroundColor: todo.color }}
 				onMouseLeave={() => this.setState({ visibleColor: false })}>
 				<div
@@ -96,7 +89,7 @@ class CardTodo extends Component {
 					onClick={() => this.props.toggleChecked(this.props.todo.id)}>
 					<i className='mdi mdi-check' />
 				</div>
-				<div className='card-body' onClick={this.activateEdit}>
+				<div className='card-body' onClick={() => this.props.startEdit(todo.id)}>
 					<ContentEditable html={todo.name} className={'card-title h5'} onChange={event => this.handleChange(event, 'name')} />
 					<ContentEditable html={todo.content} className={'card-text'} onChange={event => this.handleChange(event, 'content')} />
 				</div>
@@ -125,8 +118,8 @@ class CardTodo extends Component {
 							</button>
 						)}
 					</div>
-					{this.state.activeClass && (
-						<button type='button' aria-label='Save' onClick={this.onClose} className='btn btn-light'>
+					{this.props.isActive && (
+						<button type='button' aria-label='Save' onClick={this.onDone} className='btn btn-light'>
 							Close
 						</button>
 					)}
@@ -154,8 +147,8 @@ class CardTodo extends Component {
 	}
 }
 
-CardTodo.propTypes = {
+Todo.propTypes = {
 	todo: PropTypes.object.isRequired
 };
 
-export default connect(null, mapDispatchToProps)(CardTodo);
+export default connect(null, mapDispatchToProps)(Todo);
