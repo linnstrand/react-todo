@@ -131,7 +131,7 @@ class CardTodo extends Component {
 						</button>
 					)}
 				</div>
-				<div className={'shadow-sm color-options ' + (this.state.visibleColor ? 'visible' : 'invisible')}>
+				<div className={'shadow-sm color-options ' + (this.state.visibleColor ? 'shown' : '')}>
 					{COLORS.map(color => {
 						const styling = {
 							borderColor: color.hex,
