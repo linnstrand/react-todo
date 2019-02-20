@@ -9,7 +9,8 @@ import { CheckButton } from './CheckButton';
 class Todo extends Component {
 	constructor(props) {
 		super(props);
-		this.myRef = React.createRef();
+		this.cardRef = React.createRef();
+		this.inputRef = React.createRef();
 		this.handleClickOutside = this.handleClickOutside.bind(this);
 		this.state = {
 			originalTodo: Object.assign({}, this.props.todo),
@@ -20,6 +21,19 @@ class Todo extends Component {
 
 	componentDidMount() {
 		document.addEventListener('mousedown', this.handleClickOutside);
+		const ref = this.inputRef.current;
+		if (this.props.todo.id === 0 && ref) {
+			const range = document.createRange();
+			var sel = window.getSelection();
+			range.setStart(ref, 1);
+			range.collapse(true);
+			sel.removeAllRanges();
+			sel.addRange(range);
+			ref.focus();
+			// ref.focus();
+			// ref.selectionStart = ref.innerText.length;
+			// ref.selectionEnd = ref.innerText.length;
+		}
 	}
 
 	componentWillUnmount() {
@@ -27,7 +41,7 @@ class Todo extends Component {
 	}
 
 	handleClickOutside = e => {
-		if (this.props.isActive && !this.myRef.current.contains(e.target)) {
+		if (this.props.isActive && !this.cardRef.current.contains(e.target)) {
 			this.onDone();
 		}
 	};
@@ -66,7 +80,7 @@ class Todo extends Component {
 		let todo = this.props.todo;
 		return (
 			<div
-				ref={this.myRef}
+				ref={this.cardRef}
 				className={`todo-card card' ${this.props.isActive ? ' is-editing' : ''}${this.props.checked ? ' is-checked' : ''}`}
 				style={{ backgroundColor: todo.color || '#fff' }}
 				onMouseLeave={() => this.setState({ visibleColor: false })}>
@@ -77,7 +91,7 @@ class Todo extends Component {
 						className={'card-title h5'}
 						onChange={event => this.handleChange(event, 'name')}
 					/>
-					<ContentEditable html={todo.content} className={'card-text'} onChange={event => this.handleChange(event, 'content')} />
+					<ContentEditable html={todo.content} innerRef={this.inputRef} className={'card-text'} onChange={event => this.handleChange(event, 'content')} />
 				</div>
 				<div className='card-footer'>
 					<div className='d-inline-flex'>

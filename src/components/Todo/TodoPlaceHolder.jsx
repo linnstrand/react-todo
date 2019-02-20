@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { UpdateNew } from '../../actions/index';
+import { UpdateNew, editingStart } from '../../actions/index';
 import ContentEditable from 'react-contenteditable';
 import { setBullet } from './todoService';
 
 const mapDispatchToProps = dispatch => {
 	return {
-		UpdateNew: todo => dispatch(UpdateNew(todo))
+		UpdateNew: todo => dispatch(UpdateNew(todo)),
+		editingStart: id => dispatch(editingStart(id))
 	};
 };
 
@@ -24,6 +25,7 @@ class TodoPlaceHolder extends Component {
 		let todo = Object.assign({}, this.props.newTodo);
 		todo.content = event.target.value;
 		this.props.UpdateNew(todo);
+		this.props.editingStart(todo.id)
 	};
 
 	toggleBullets = () => {

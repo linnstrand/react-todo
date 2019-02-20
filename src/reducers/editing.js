@@ -8,12 +8,12 @@ const initial = {
 };
 
 const editingToggle = (state, id) => {
-	const newArray = state.checked.includes(id) ? state.checked.filter(i => i !== id) : state.checked.concat([ id ]);
+	const newArray = state.checked.includes(id) ? state.checked.filter(i => i !== id) : state.checked.concat([id]);
 	return UpdateObject(state, { checked: newArray });
 };
 
 const editingStart = (state, action) => {
-	return Object.assign({}, state, { target: action.payload });
+	return Object.assign({}, state, { target: action });
 };
 
 const editing = (state = initial, action) => {
