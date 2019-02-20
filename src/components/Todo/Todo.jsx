@@ -1,23 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { editColor, setColor, deleteTodo, updateTodo, cancelEdit, toggleChecked, startEdit } from '../../actions';
-import { connect } from 'react-redux';
 import ContentEditable from 'react-contenteditable';
 import './todo.scss';
 import { setBullet } from './todoService';
-import { COLORS } from '../../constants/colors';
-
-const mapDispatchToProps = dispatch => {
-	return {
-		editColor: id => dispatch(editColor(id)),
-		deleteTodo: id => dispatch(deleteTodo(id)),
-		setColor: (id, hex) => dispatch(setColor({ id, hex })),
-		updateTodo: todo => dispatch(updateTodo(todo)),
-		toggleChecked: id => dispatch(toggleChecked(id)),
-		cancelEdit: () => dispatch(cancelEdit()),
-		startEdit: id => dispatch(startEdit(id))
-	};
-};
+import { ColorOptions } from './ColorOptions';
+import { CheckButton } from './CheckButton';
 
 class Todo extends Component {
 	constructor(props) {
@@ -27,7 +14,7 @@ class Todo extends Component {
 		this.state = {
 			originalTodo: Object.assign({}, this.props.todo),
 			isChanged: false,
-			visibleColor: false,
+			visibleColor: false
 		};
 	}
 
@@ -48,7 +35,8 @@ class Todo extends Component {
 	isChanged = todo => todo.name !== this.state.originalTodo.name || todo.content !== this.state.originalTodo.content;
 
 	onDone = () => {
-		this.props.cancelEdit();
+		this.props.editingCancel();
+		this.props.doneTodo();
 		this.setState({ isChanged: false });
 	};
 
@@ -79,18 +67,16 @@ class Todo extends Component {
 		return (
 			<div
 				ref={this.myRef}
-				className={'todo-card card' + (this.props.isActive ? ' is-editing' : '') + (this.props.checked ? ' is-checked' : '')}
-				style={{ backgroundColor: todo.color }}
+				className={`todo-card card' ${this.props.isActive ? ' is-editing' : ''}${this.props.checked ? ' is-checked' : ''}`}
+				style={{ backgroundColor: todo.color || '#fff' }}
 				onMouseLeave={() => this.setState({ visibleColor: false })}>
-				<div
-					className={'select-button'}
-					role='button'
-					aria-label='Check Todo'
-					onClick={() => this.props.toggleChecked(this.props.todo.id)}>
-					<i className='mdi mdi-check' />
-				</div>
-				<div className='card-body' onClick={() => this.props.startEdit(todo.id)}>
-					<ContentEditable html={todo.name} className={'card-title h5'} onChange={event => this.handleChange(event, 'name')} />
+				<CheckButton editingToggle={this.props.editingToggle} id={this.props.todo.id} />
+				<div className='card-body' onClick={() => this.props.editingStart(todo.id)}>
+					<ContentEditable
+						html={todo.name || ''}
+						className={'card-title h5'}
+						onChange={event => this.handleChange(event, 'name')}
+					/>
 					<ContentEditable html={todo.content} className={'card-text'} onChange={event => this.handleChange(event, 'content')} />
 				</div>
 				<div className='card-footer'>
@@ -124,24 +110,7 @@ class Todo extends Component {
 						</button>
 					)}
 				</div>
-				<div className={'shadow-sm color-options ' + (this.state.visibleColor ? 'shown' : '')}>
-					{COLORS.map(color => {
-						const styling = {
-							borderColor: color.hex,
-							backgroundColor: color.hex
-						};
-						return (
-							<button
-								key={color.hex}
-								className='color-button'
-								title={color.name}
-								style={styling}
-								onClick={() => this.props.setColor(todo.id, color.hex)}
-								aria-label={color.name}
-							/>
-						);
-					})}
-				</div>
+				<ColorOptions visibleColor={this.state.visibleColor} setColor={this.props.setColor} id={todo.id} />
 			</div>
 		);
 	}
@@ -151,4 +120,4 @@ Todo.propTypes = {
 	todo: PropTypes.object.isRequired
 };
 
-export default connect(null, mapDispatchToProps)(Todo);
+export default Todo;

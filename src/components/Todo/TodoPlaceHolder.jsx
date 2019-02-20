@@ -1,22 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { addTodo } from '../../actions/index';
+import { UpdateNew } from '../../actions/index';
 import ContentEditable from 'react-contenteditable';
 import { setBullet } from './todoService';
 
 const mapDispatchToProps = dispatch => {
 	return {
-		addTodo: todo => dispatch(addTodo(todo))
+		UpdateNew: todo => dispatch(UpdateNew(todo))
 	};
 };
 
-class TodoNew extends Component {
+class TodoPlaceHolder extends Component {
 	constructor(props) {
 		super(props);
 		this.inputRef = React.createRef();
-		this.state = {
-			newTodo: { title: '', content: '' }
-		};
 	}
 
 	componentDidMount() {
@@ -24,14 +21,14 @@ class TodoNew extends Component {
 	}
 
 	handleChange = event => {
-		let changed = Object.assign({}, this.state.newTodo);
-		changed.content = event.target.value;
-		this.setState({ newTodo: changed });
+		let todo = Object.assign({}, this.props.newTodo);
+		todo.content = event.target.value;
+		this.props.UpdateNew(todo);
 	};
 
 	toggleBullets = () => {
 		let todo = setBullet(this.state.newTodo);
-		this.setState({ newTodo: todo });
+		this.props.UpdateNew(todo);
 	};
 
 	render() {
@@ -39,11 +36,11 @@ class TodoNew extends Component {
 			<div className='d-flex card todo-card new-todo-card'>
 				<div className='new-todo-body'>
 					<div className='new-todo-text'>
-						{!this.state.newTodo.content && (
+						{!this.props.newTodo.content && (
 							<div className='position-absolute new-todo-text todo-placeholder'>Write a note!</div>
 						)}
 						<ContentEditable
-							html={this.state.newTodo.content || ''}
+							html={this.props.newTodo.content || ''}
 							innerRef={this.inputRef}
 							className={'new-todo-text new-todo-content'}
 							onChange={event => this.handleChange(event)}
@@ -51,11 +48,7 @@ class TodoNew extends Component {
 					</div>
 				</div>
 				<div className='new-todo-menu'>
-					<button
-						type='button'
-						aria-label='Bullet Points'
-						onClick={this.toggleBullets}
-						className={'todo-card-action' + (this.state.hasBullets ? ' bullets-active' : '')}>
+					<button type='button' aria-label='Bullet Points' onClick={this.toggleBullets} className={'todo-card-action'}>
 						<i className='mdi mdi-format-list-bulleted' />
 					</button>
 				</div>
@@ -64,4 +57,4 @@ class TodoNew extends Component {
 	}
 }
 
-export default connect(null, mapDispatchToProps)(TodoNew);
+export default connect(null, mapDispatchToProps)(TodoPlaceHolder);

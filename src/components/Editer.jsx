@@ -1,5 +1,5 @@
 import React from 'react';
-import { saveEdit, cancelEdit } from '../actions';
+import { saveEdit, editingCancel } from '../actions';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
@@ -10,16 +10,16 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => {
 	return {
 		saveEdit: a => dispatch(saveEdit(a)),
-		cancelEdit: () => dispatch(cancelEdit())
+		editingCancel: () => dispatch(editingCancel())
 	};
 };
 
-const Editer = ({ editing, cancelEdit, saveEdit }) => {
+const Editer = ({ editing, editingCancel, saveEdit }) => {
 	const todo = editing.target;
 	return (
 		<div>
 			<Modal isOpen={editing.on}>
-				<ModalHeader toggle={cancelEdit}>
+				<ModalHeader toggle={editingCancel}>
 					<div className='card-title h5' contentEditable='true' suppressContentEditableWarning='true'>
 						{todo.name}
 					</div>
@@ -38,7 +38,7 @@ const Editer = ({ editing, cancelEdit, saveEdit }) => {
 					<Button color='primary' onClick={() => saveEdit(todo)}>
 						Save
 					</Button>{' '}
-					<Button color='secondary' onClick={cancelEdit}>
+					<Button color='secondary' onClick={editingCancel}>
 						Cancel
 					</Button>
 				</ModalFooter>

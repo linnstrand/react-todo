@@ -6,8 +6,6 @@ const initialState = [
 	{ id: 2, name: 'Book Hair Appointment', content: '<div>Soon!</div>' }
 ];
 
-// const ObjectExists = (itemId, oldArray) => oldArray.filter(item => item.id === itemId).length > 0;
-
 const AddTodo = (oldArray, newObject) => {
 	newObject.id = oldArray.length + 2;
 	return [ newObject ].concat(oldArray);

@@ -7,22 +7,25 @@ const initial = {
 	checked: []
 };
 
-const ToggleTodo = (state, id) => {
-	const newArray = state.checked.includes(id) ? state.checked.filter(i => i !== id) : state.checked.concat([id]);
+const editingToggle = (state, id) => {
+	const newArray = state.checked.includes(id) ? state.checked.filter(i => i !== id) : state.checked.concat([ id ]);
 	return UpdateObject(state, { checked: newArray });
+};
+
+const editingStart = (state, action) => {
+	return Object.assign({}, state, { target: action.payload });
 };
 
 const editing = (state = initial, action) => {
 	switch (action.type) {
 		case Constants.START_EDIT:
-			action.editing = true;
-			return Object.assign({}, state, { target: action.payload });
+			return editingStart(state, action.payload);
 		case Constants.SAVE_EDIT:
 			return Object.assign({}, state, initial);
 		case Constants.CANCEL_EDIT:
 			return Object.assign({}, state, { target: undefined });
 		case Constants.TOGGLE_CHECKED:
-			return ToggleTodo(state, action.payload);
+			return editingToggle(state, action.payload);
 
 		default:
 			return state;
