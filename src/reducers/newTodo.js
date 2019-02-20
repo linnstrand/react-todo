@@ -1,7 +1,7 @@
 import * as Constants from '../constants/action-types';
 import { UpdateObject } from './util';
 
-const initialState = { title: '', content: '', id: 0 };
+const initialState = { name: '', content: '', id: 0 };
 
 const UpdateNew = (state, todo) => UpdateObject(state, todo);
 const deleteNew = state => UpdateObject(state, initialState);

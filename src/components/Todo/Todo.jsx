@@ -30,9 +30,6 @@ class Todo extends Component {
 			sel.removeAllRanges();
 			sel.addRange(range);
 			ref.focus();
-			// ref.focus();
-			// ref.selectionStart = ref.innerText.length;
-			// ref.selectionEnd = ref.innerText.length;
 		}
 	}
 
@@ -86,6 +83,9 @@ class Todo extends Component {
 				onMouseLeave={() => this.setState({ visibleColor: false })}>
 				<CheckButton editingToggle={this.props.editingToggle} id={this.props.todo.id} />
 				<div className='card-body' onClick={() => this.props.editingStart(todo.id)}>
+					{!todo.name && (
+						<div className='position-absolute new-todo-text todo-placeholder'>Title</div>
+					)}
 					<ContentEditable
 						html={todo.name || ''}
 						className={'card-title h5'}

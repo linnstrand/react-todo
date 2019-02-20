@@ -8,7 +8,7 @@ const initialState = [
 
 const AddTodo = (oldArray, newObject) => {
 	newObject.id = oldArray.length + 2;
-	return [ newObject ].concat(oldArray);
+	return [newObject].concat(oldArray);
 };
 
 const UpdateTodo = (state, todo) => UpdateObjectInArray(state, todo.id, oldItem => UpdateObject(oldItem, todo));
