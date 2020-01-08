@@ -8,7 +8,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = dispatch => {
 	return {
-        deleteTodo: id => dispatch(deleteNew(id)),
+		deleteTodo: id => dispatch(deleteNew(id)),
 		setColor: (id, hex) => dispatch(SetNewColor({ id, hex })),
 		updateTodo: todo => dispatch(UpdateNew(todo)),
 		editingCancel: () => dispatch(editingCancel()),
