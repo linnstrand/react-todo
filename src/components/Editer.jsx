@@ -1,5 +1,5 @@
 import React from 'react';
-import { saveEdit, editingCancel } from '../actions';
+import { saveEdit, editingCancel } from '../store/reducers/todos';
 import { connect } from 'react-redux';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 

@@ -1,2 +1,14 @@
 {
+  "prettier.jsxBracketSameLine": true,
+  "prettier.jsxSingleQuote": true,
+  "prettier.singleQuote": true,
+  "javascript.preferences.quoteStyle": "single",
+  "typescript.preferences.quoteStyle": "single",
+  "editor.minimap.enabled": false,
+  "editor.formatOnSave": false,
+  "workbench.editor.enablePreview": false,
+  "window.zoomLevel": -1,
+  "editor.fontSize": 13,
+  "markdown.preview.fontSize": 13,
+  "terminal.integrated.fontSize": 13,
 }

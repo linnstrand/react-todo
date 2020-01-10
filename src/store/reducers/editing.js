@@ -1,5 +1,5 @@
-import * as Constants from '../constants/action-types';
-import { UpdateObject } from './util';
+import * as Constants from '../action-types';
+import { UpdateObject } from '../util';
 
 const initial = {
 	target: undefined,
