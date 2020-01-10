@@ -16,7 +16,7 @@ export class ColorOptions extends React.Component {
               className='color-button'
               title={color.name}
               style={styling}
-              onClick={() => this.props.setColor(this.props.id, color.hex)}
+              onClick={() => this.props.setColor(color.hex)}
               aria-label={color.name}
             />
           );

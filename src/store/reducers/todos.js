@@ -40,7 +40,7 @@ const AddTodo = (oldArray, newObject) => {
 const UpdateTodo = (state, todo) =>
   UpdateObjectInArray(state, todo.id, oldItem => UpdateObject(oldItem, todo));
 const DeleteTodo = (state, itemId) => state.filter(todo => todo.id !== itemId);
-const SetTodoColor = (state, todo) => {
+const SetColor = (state, todo) => {
   return UpdateObjectInArray(state, todo.id, oldItem => {
     return UpdateObject(oldItem, { color: todo.hex });
   });
@@ -55,7 +55,7 @@ const todos = (state = initialState, action) => {
     case Constants.DELETE_TODO:
       return DeleteTodo(state, action.payload);
     case Constants.SET_COLOR:
-      return SetTodoColor(state, action.payload);
+      return SetColor(state, action.payload);
     default:
       return state;
   }

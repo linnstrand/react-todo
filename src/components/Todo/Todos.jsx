@@ -1,5 +1,9 @@
 import React, { Component } from 'react';
-import { addTodo, updateTodo } from '../../store/reducers/todos';
+import {
+  addTodo,
+  updateTodo,
+  deleteTodo
+} from '../../store/reducers/todos';
 import TodoPlaceHolder from './TodoPlaceHolder';
 import TodoCard from './TodoCard';
 import { connect } from 'react-redux';
@@ -11,7 +15,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => {
   return {
     addTodo: todo => dispatch(addTodo(todo)),
-    updateTodo: todo => dispatch(updateTodo(todo))
+    updateTodo: todo => dispatch(updateTodo(todo)),
+    deleteTodo: id => dispatch(deleteTodo(id))
   };
 };
 
@@ -84,6 +89,7 @@ class Todos extends Component {
             <TodoCard
               todo={todo}
               checked={this.state.checked.includes(todo.id)}
+              setColor={color => this.props.setColor(color)}
               isActive={this.state.target === todo.id}
               onChange={t => this.onEdit(t)}
               setActive={() => this.setState({ target: todo.id })}

@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import ContentEditable from 'react-contenteditable';
-import './todo.scss';
+import '../../styles/todo.scss';
 import { setBullet } from './todoService';
-import { ColorOptions } from '../ColorOptions';
+import TodoCardFooter from './TodoCardFooter';
 import { CheckButton } from '../CheckButton';
+import TodoHeader from './TodoHeader';
+import TodoBody from './TodoBody';
 
 export default class TodoCard extends Component {
   constructor(props) {
@@ -13,8 +14,7 @@ export default class TodoCard extends Component {
 
     this.handleClickOutside = this.handleClickOutside.bind(this);
     this.state = {
-      originalTodo: { ...this.props.todo },
-      visibleColor: false
+      originalTodo: { ...this.props.todo }
     };
   }
 
@@ -86,74 +86,23 @@ export default class TodoCard extends Component {
           this.props.isActive ? ' is-editing' : ''
         }${this.props.checked ? ' is-checked' : ''}`}
         style={{ backgroundColor: todo.color || '#fff' }}
-        onMouseLeave={() => this.setState({ visibleColor: false })}>
+        >
         <CheckButton editingToggle={this.props.check} id={this.props.todo.id} />
-        <div className='card-body' onClick={() => this.props.setActive(todo)}>
-          {!todo.name && (
-            <div className='position-absolute new-todo-text todo-placeholder'>
-              Title
-            </div>
-          )}
-          <ContentEditable
-            html={todo.name || ''}
-            className={'card-title h5'}
-            onChange={event => this.handleChange(event, 'name')}
-          />
-          <ContentEditable
-            html={todo.content}
-            innerRef={this.inputRef}
-            className={'card-text'}
-            onChange={event => this.handleChange(event, 'content')}
-          />
-        </div>
-        <div className='card-footer'>
-          <div className='d-inline-flex'>
-            <button
-              type='button'
-              className='todo-card-action'
-              onMouseEnter={() => this.setState({ visibleColor: true })}>
-              <i className='mdi mdi-brush' />
-            </button>
-            <button
-              type='button'
-              aria-label='Bullet Points'
-              onClick={this.toggleBullets}
-              className={
-                'todo-card-action' + (todo.hasBullets ? ' bullets-active' : '')
-              }>
-              <i className='mdi mdi-format-list-bulleted' />
-            </button>
-            <button
-              type='button'
-              aria-label='Delete'
-              onClick={() => this.props.deleteTodo(todo.id)}
-              className='btn todo-card-action'>
-              <i className='mdi mdi-delete' />
-            </button>
-            {this.isChanged() && (
-              <button
-                type='button'
-                aria-label='Undo'
-                onClick={this.undo}
-                className='todo-card-action'>
-                <i className='mdi mdi-undo' />
-              </button>
-            )}
-          </div>
-          {this.props.isActive && (
-            <button
-              type='button'
-              aria-label='Save'
-              onClick={this.close}
-              className='btn btn-light'>
-              Close
-            </button>
-          )}
-        </div>
-        <ColorOptions
-          visibleColor={this.state.visibleColor}
-          setColor={this.props.setColor}
-          id={todo.id}
+        <TodoHeader
+          name={todo.name}
+          nameChange={name => this.handleChange(name, 'name')}
+        />
+        <TodoBody
+          content={todo.content}
+          contentChange={content => this.handleChange(content, 'content')}
+        />
+        <TodoCardFooter
+          hasBullets={todo.hasBullets}
+          isChanged={() => this.isChanged()}
+          iActive={this.props.isActive}
+          toggleBullets={() => this.toggleBullets()}
+          deleteTodo={() => this.props.deleteTodo(todo.id)}
+          setColor={color => this.onChange({...todo, color: color})}
         />
       </div>
     );
