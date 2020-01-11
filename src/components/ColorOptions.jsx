@@ -4,7 +4,10 @@ import { COLORS } from '../constants/colors';
 export class ColorOptions extends React.Component {
   render() {
     return (
-      <div className={'shadow-sm color-options ' + (this.props.visibleColor ? 'shown' : '')}>
+      <div
+        className={
+          'shadow-sm color-options ' + (this.props.visibleColor ? 'shown' : '')
+        }>
         {COLORS.map(color => {
           const styling = {
             borderColor: color.hex,

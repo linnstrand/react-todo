@@ -13,7 +13,7 @@ export default class TodoHeader extends Component {
         <ContentEditable
           html={this.props.name || ''}
           className={'card-title h5'}
-          onChange={event => this.props.nameChange(event, 'name')}
+          onChange={event => this.props.nameChange(event.target.value)}
         />
       </React.Fragment>
     );

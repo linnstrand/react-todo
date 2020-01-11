@@ -4,14 +4,13 @@ import { setBullet } from './todoService';
 import TodoCardFooter from './TodoCardFooter';
 import { CheckButton } from '../CheckButton';
 import TodoHeader from './TodoHeader';
-import TodoBody from './TodoBody';
+import { TodoBody } from './TodoBody';
 
 export default class TodoCard extends Component {
   constructor(props) {
     super(props);
     this.cardRef = React.createRef();
     this.inputRef = React.createRef();
-
     this.handleClickOutside = this.handleClickOutside.bind(this);
     this.state = {
       originalTodo: { ...this.props.todo }
@@ -21,15 +20,15 @@ export default class TodoCard extends Component {
   // Initition
   componentDidMount() {
     document.addEventListener('mousedown', this.handleClickOutside);
-    const ref = this.inputRef.current;
-    if (this.props.todo.id === 0 && ref) {
+    const current = this.inputRef.current;
+    if (this.props.todo.id === 0 && current) {
       const range = document.createRange();
       var sel = window.getSelection();
-      range.setStart(ref, 1);
+      range.setStart(current, 1);
       range.collapse(true);
       sel.removeAllRanges();
       sel.addRange(range);
-      ref.focus();
+      current.focus();
     }
   }
 
@@ -38,7 +37,7 @@ export default class TodoCard extends Component {
     document.removeEventListener('mousedown', this.handleClickOutside);
   }
 
-  // Events
+  // close todo if leaving focus
   handleClickOutside = e => {
     // If this todo is active, and the card doesn't contain the cliched element, accept changes.
     if (this.props.isActive && !this.cardRef.current.contains(e.target)) {
@@ -46,14 +45,8 @@ export default class TodoCard extends Component {
     }
   };
 
-  handleChange = (event, field) => {
-    let changed = { ...this.props.todo };
-    changed[field] = event.target.value;
-    this.onChange(changed);
-  };
-
   undo = () => {
-    this.onChange(this.state.originalTodo);
+    this.props.onChange(this.state.originalTodo);
     this.close();
   };
 
@@ -62,7 +55,10 @@ export default class TodoCard extends Component {
     this.onChange(todo);
   };
 
-  // !Events
+  onChange(changed) {
+    changed.hasBullets = changed.content.includes('<li>');
+    this.props.onChange(changed);
+  }
 
   isChanged = () =>
     this.props.todo.name !== this.state.originalTodo.name ||
@@ -71,11 +67,6 @@ export default class TodoCard extends Component {
   close = () => {
     this.props.done(this.props.todo);
   };
-
-  onChange(changed) {
-    changed.hasBullets = changed.content.includes('<li>');
-    this.props.onChange(changed);
-  }
 
   render() {
     let todo = this.props.todo;
@@ -86,23 +77,27 @@ export default class TodoCard extends Component {
           this.props.isActive ? ' is-editing' : ''
         }${this.props.checked ? ' is-checked' : ''}`}
         style={{ backgroundColor: todo.color || '#fff' }}
-        >
-        <CheckButton editingToggle={this.props.check} id={this.props.todo.id} />
+        onClick={() => this.props.setActive()}>
+        <CheckButton toggleCheck={() => this.props.toggleCheck()} id={this.props.todo.id} />
         <TodoHeader
           name={todo.name}
-          nameChange={name => this.handleChange(name, 'name')}
+          nameChange={name => this.onChange({ ...todo, name: name })}
         />
         <TodoBody
           content={todo.content}
-          contentChange={content => this.handleChange(content, 'content')}
+          targetRef={this.inputRef}
+          contentChange={content =>
+            this.onChange({ ...todo, content: content })
+          }
         />
         <TodoCardFooter
           hasBullets={todo.hasBullets}
-          isChanged={() => this.isChanged()}
+          isChanged={this.isChanged()}
           iActive={this.props.isActive}
           toggleBullets={() => this.toggleBullets()}
           deleteTodo={() => this.props.deleteTodo(todo.id)}
-          setColor={color => this.onChange({...todo, color: color})}
+          setColor={color => this.onChange({ ...todo, color: color })}
+          undo={() => this.undo()}
         />
       </div>
     );

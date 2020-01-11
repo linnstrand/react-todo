@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
-import {
-  addTodo,
-  updateTodo,
-  deleteTodo
-} from '../../store/reducers/todos';
+import { addTodo, updateTodo, deleteTodo } from '../../store/reducers/todos';
 import TodoPlaceHolder from './TodoPlaceHolder';
 import TodoCard from './TodoCard';
 import { connect } from 'react-redux';
@@ -35,8 +31,6 @@ class Todos extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      target: undefined,
-      targetChanged: false,
       activeTodo: undefined,
       checked: [],
       newTodo: { ...emptyTodo }
@@ -53,11 +47,11 @@ class Todos extends Component {
 
   addTodo = () => {
     this.props.addTodo(this.state.newTodo);
-    this.setState({ target: undefined, newTodo: { ...emptyTodo } });
+    this.setState({ activeTodo: undefined, newTodo: { ...emptyTodo } });
   };
 
   onEdit(todo) {
-    this.setState({ target: todo.id });
+    this.setState({ activeTodo: todo.id });
     this.props.updateTodo(todo);
   }
 
@@ -72,8 +66,10 @@ class Todos extends Component {
           <NewTodo
             newTodo={this.state.newTodo}
             checked={this.state.checked.includes(this.state.newTodo.id)}
-            isActive={this.state.target === this.state.newTodo.id}
-            setActive={() => this.setState({ target: this.state.newTodo.id })}
+            isActive={this.state.activeTodo === this.state.newTodo.id}
+            setActive={() =>
+              this.setState({ activeTodo: this.state.newTodo.id })
+            }
             onChange={todo => this.setState({ newTodo: todo })}
             check={id => this.toggleCheck(id)}
             done={() => this.addTodo()}
@@ -90,10 +86,12 @@ class Todos extends Component {
               todo={todo}
               checked={this.state.checked.includes(todo.id)}
               setColor={color => this.props.setColor(color)}
-              isActive={this.state.target === todo.id}
+              isActive={this.state.activeTodo === todo.id}
               onChange={t => this.onEdit(t)}
-              setActive={() => this.setState({ target: todo.id })}
-              done={() => this.setState({ target: undefined })}
+              toggleCheck={() => this.toggleCheck(todo.id)}
+              setActive={() => this.setState({ activeTodo: todo.id })}
+              done={() => this.setState({ activeTodo: undefined })}
+              deleteTodo={() => this.props.deleteTodo(todo.id)}
             />
           </div>
         ))}

@@ -48,7 +48,7 @@ export default class TodoCardFooter extends Component {
               <button
                 type='button'
                 aria-label='Undo'
-                onClick={this.undo}
+                onClick={() => this.props.undo()}
                 className='todo-card-action'>
                 <i className='mdi mdi-undo' />
               </button>

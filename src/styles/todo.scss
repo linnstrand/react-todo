@@ -27,7 +27,6 @@
   &.is-checked {
     color: blue;
     .select-button {
-      background-color: blue;
       display: inline;
       opacity: 1;
     }
@@ -88,9 +87,11 @@
   background-color: #333;
   color: white;
   border-radius: 50%;
-  width: 1.4rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  font-size: 0.8rem;
   text-align: center;
-  line-height: 1.4rem;
+  line-height: 1.2rem;
   top: -0.5rem;
   left: -0.5rem;
   cursor: pointer;
