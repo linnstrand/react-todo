@@ -31,7 +31,6 @@ class Todos extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeTodo: undefined,
       checked: [],
       newTodo: { ...emptyTodo }
     };
@@ -47,51 +46,36 @@ class Todos extends Component {
 
   addTodo = () => {
     this.props.addTodo(this.state.newTodo);
-    this.setState({ activeTodo: undefined, newTodo: { ...emptyTodo } });
+    this.setState({ newTodo: { ...emptyTodo } });
   };
 
-  onEdit(todo) {
-    this.setState({ activeTodo: todo.id });
-    this.props.updateTodo(todo);
-  }
+  doneEdit() {}
 
   render() {
     return (
       <React.Fragment>
-        <div
-          className={
-            'd-flex new-todo-card' +
-            (this.state.activeTodo === 0 ? ' is-active' : '')
-          }>
+        <div className='d-flex new-todo-card'>
           <NewTodo
             newTodo={this.state.newTodo}
             checked={this.state.checked.includes(this.state.newTodo.id)}
-            isActive={this.state.activeTodo === this.state.newTodo.id}
-            setActive={() =>
-              this.setState({ activeTodo: this.state.newTodo.id })
-            }
             onChange={todo => this.setState({ newTodo: todo })}
             check={id => this.toggleCheck(id)}
             done={() => this.addTodo()}
+            deleteTodo={() => this.setState({ newTodo: { ...emptyTodo } })}
           />
         </div>
         {this.props.todos.map(todo => (
           <div
             key={todo.id}
-            className={
-              'd-inline-flex align-items-start flex-wrap' +
-              (this.state.activeTodo === 0 ? ' is-active' : '')
-            }>
+            className={'d-inline-flex align-items-start flex-wrap'}>
             <TodoCard
               todo={todo}
               checked={this.state.checked.includes(todo.id)}
               setColor={color => this.props.setColor(color)}
-              isActive={this.state.activeTodo === todo.id}
-              onChange={t => this.onEdit(t)}
+              onChange={t => this.props.updateTodo(t)}
               toggleCheck={() => this.toggleCheck(todo.id)}
-              setActive={() => this.setState({ activeTodo: todo.id })}
-              done={() => this.setState({ activeTodo: undefined })}
               deleteTodo={() => this.props.deleteTodo(todo.id)}
+              done={() => this.doneEdit()}
             />
           </div>
         ))}

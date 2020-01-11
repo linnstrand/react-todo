@@ -6,7 +6,7 @@ import About from './pages/About';
 const App = () => (
   <Router>
     <div className='App'>
-      <nav className='navbar navbar-expand navbar-light'>
+      {/* <nav className='navbar navbar-expand navbar-light'>
         <div className='navbar-nav'>
           <Link to='/' className='nav-link'>
             Home
@@ -21,7 +21,7 @@ const App = () => (
             About
           </Link>
         </div>
-      </nav>
+      </nav> */}
       <main className='mt-4'>
         <div className='container-fluid'>
           <Route path='/' exact component={Home} />

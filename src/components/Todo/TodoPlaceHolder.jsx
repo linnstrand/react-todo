@@ -27,11 +27,11 @@ class TodoPlaceHolder extends Component {
 
   render() {
     return (
-      <div className='d-flex card todo-card new-todo-card'>
+      <div className='d-flex card todo-card todo-placeholder'>
         <div className='new-todo-body'>
           <div className='new-todo-text'>
             {!this.props.todo.content && (
-              <div className='position-absolute new-todo-text todo-placeholder'>
+              <div className='position-absolute new-todo-text todo-placeholder-title'>
                 Write a note!
               </div>
             )}

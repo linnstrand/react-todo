@@ -3,6 +3,7 @@
   color: #4c4c4c;
   margin: 0.5rem;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  max-width: 400px;
   &:hover {
     opacity: 1;
     box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.15);
@@ -21,9 +22,9 @@
     }
     .card-text {
       color: black;
-      font-weight: 500;
     }
   }
+
   &.is-checked {
     color: blue;
     .select-button {
@@ -31,6 +32,12 @@
       opacity: 1;
     }
   }
+}
+
+[contenteditable='true']:active,
+[contenteditable='true']:focus {
+  border: none;
+  outline: none;
 }
 
 .card-body {
@@ -44,7 +51,6 @@
 
 .card-title {
   margin-bottom: 0;
-  line-height: 2rem;
 }
 
 .card-text {
@@ -65,6 +71,14 @@
     margin-bottom: 0.25rem;
   }
 }
+
+.close-btn {
+  visibility: hidden;
+  .is-editing & {
+    visibility: visible;
+  }
+}
+
 .todo-card-action {
   color: #333;
   padding: 0.2rem;
@@ -102,8 +116,16 @@
 // new todo
 .new-todo-card {
   margin: 0.5rem auto 1rem auto;
-  flex-direction: row;
-  max-width: 500px;
+  width: 350px;
+  .todo-card {
+    width: 500px;
+  }
+  .todo-placeholder {
+    flex-direction: row;
+  }
+  .close-btn {
+    visibility: visible;
+  }
 }
 
 .new-todo-content {
@@ -150,7 +172,7 @@
   color: black;
 }
 
-.todo-placeholder {
+.todo-placeholder-title {
   font-weight: bold;
   color: grey;
   pointer-events: none;
@@ -162,7 +184,7 @@
   line-height: 1;
 }
 
-.bullets-active {
+.bullets-active .bullets-btn {
   color: orange;
 }
 

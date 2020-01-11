@@ -13,7 +13,9 @@ export default class TodoCard extends Component {
     this.inputRef = React.createRef();
     this.handleClickOutside = this.handleClickOutside.bind(this);
     this.state = {
-      originalTodo: { ...this.props.todo }
+      originalTodo: { ...this.props.todo },
+      titleActive: false,
+      contentActive: false
     };
   }
 
@@ -40,10 +42,12 @@ export default class TodoCard extends Component {
   // close todo if leaving focus
   handleClickOutside = e => {
     // If this todo is active, and the card doesn't contain the cliched element, accept changes.
-    if (this.props.isActive && !this.cardRef.current.contains(e.target)) {
+    if (this.isActive() && !this.cardRef.current.contains(e.target)) {
       this.close();
     }
   };
+
+  isActive = () => this.state.contentActive || this.state.titleActive;
 
   undo = () => {
     this.props.onChange(this.state.originalTodo);
@@ -73,31 +77,31 @@ export default class TodoCard extends Component {
     return (
       <div
         ref={this.cardRef}
-        className={`todo-card card' ${
-          this.props.isActive ? ' is-editing' : ''
-        }${this.props.checked ? ' is-checked' : ''}`}
-        style={{ backgroundColor: todo.color || '#fff' }}
-        onClick={() => this.props.setActive()}>
-        <CheckButton toggleCheck={() => this.props.toggleCheck()} id={this.props.todo.id} />
+        className={`todo-card card${this.isActive() ? ' is-editing' : ''}${
+          this.props.checked ? ' is-checked' : ''
+        }${todo.hasBullets ? ' bullets-active' : ''}`}
+        style={{ backgroundColor: todo.color || '#fff' }}>
+        {todo.id > 0 && (
+          <CheckButton toggleCheck={() => this.props.toggleCheck()} />
+        )}
         <TodoHeader
           name={todo.name}
-          nameChange={name => this.onChange({ ...todo, name: name })}
+          onChange={name => this.onChange({ ...todo, name: name })}
+          setActive={state => this.setState({ titleActive: state })}
         />
         <TodoBody
           content={todo.content}
           targetRef={this.inputRef}
-          contentChange={content =>
-            this.onChange({ ...todo, content: content })
-          }
+          onChange={content => this.onChange({ ...todo, content: content })}
+          setActive={state => this.setState({ contentActive: state })}
         />
         <TodoCardFooter
-          hasBullets={todo.hasBullets}
           isChanged={this.isChanged()}
-          iActive={this.props.isActive}
           toggleBullets={() => this.toggleBullets()}
           deleteTodo={() => this.props.deleteTodo(todo.id)}
           setColor={color => this.onChange({ ...todo, color: color })}
           undo={() => this.undo()}
+          close={() => this.close()}
         />
       </div>
     );

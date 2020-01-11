@@ -31,10 +31,7 @@ export default class TodoCardFooter extends Component {
               type='button'
               aria-label='Bullet Points'
               onClick={this.props.toggleBullets}
-              className={
-                'todo-card-action' +
-                (this.props.hasBullets ? ' bullets-active' : '')
-              }>
+              className='todo-card-action bullets-btn'>
               <i className='mdi mdi-format-list-bulleted' />
             </button>
             <button
@@ -54,15 +51,13 @@ export default class TodoCardFooter extends Component {
               </button>
             )}
           </div>
-          {this.props.isActive && (
-            <button
-              type='button'
-              aria-label='Save'
-              onClick={this.close}
-              className='btn btn-light'>
-              Close
-            </button>
-          )}
+          <button
+            type='button'
+            aria-label='Save'
+            onClick={() => this.props.close()}
+            className='btn btn-light close-btn'>
+            Ok
+          </button>
         </div>
         <ColorOptions
           visibleColor={this.state.visibleColor}
