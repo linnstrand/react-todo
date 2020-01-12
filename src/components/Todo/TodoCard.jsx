@@ -1,12 +1,24 @@
 import React, { Component } from 'react';
-import '../../styles/todo.scss';
+import { addTodo, updateTodo, deleteTodo } from '../../store/reducers/todos';
+import { connect } from 'react-redux';
 import { setBullet } from './todoService';
 import TodoCardFooter from './TodoCardFooter';
-import { CheckButton } from '../CheckButton';
 import TodoHeader from './TodoHeader';
 import { TodoBody } from './TodoBody';
 
-export default class TodoCard extends Component {
+const mapStateToProps = state => ({
+  todos: state.todos.list
+});
+
+const mapDispatchToProps = dispatch => {
+  return {
+    addTodo: todo => dispatch(addTodo(todo)),
+    updateTodo: todo => dispatch(updateTodo(todo)),
+    deleteTodo: id => dispatch(deleteTodo(id))
+  };
+};
+
+class TodoCard extends Component {
   constructor(props) {
     super(props);
     this.cardRef = React.createRef();
@@ -22,8 +34,9 @@ export default class TodoCard extends Component {
   // Initition
   componentDidMount() {
     document.addEventListener('mousedown', this.handleClickOutside);
+
     const current = this.inputRef.current;
-    if (this.props.todo.id === 0 && current) {
+    if (this.isNew() && current) {
       const range = document.createRange();
       var sel = window.getSelection();
       range.setStart(current, 1);
@@ -33,6 +46,8 @@ export default class TodoCard extends Component {
       current.focus();
     }
   }
+
+  isNew = () => this.props.todo.id === 0;
 
   // Destruction
   componentWillUnmount() {
@@ -50,7 +65,7 @@ export default class TodoCard extends Component {
   isActive = () => this.state.contentActive || this.state.titleActive;
 
   undo = () => {
-    this.props.onChange(this.state.originalTodo);
+    this.props.updateTodo(this.state.originalTodo);
     this.close();
   };
 
@@ -61,7 +76,11 @@ export default class TodoCard extends Component {
 
   onChange(changed) {
     changed.hasBullets = changed.content.includes('<li>');
-    this.props.onChange(changed);
+    if (this.props.onChange) {
+      this.props.onChange(changed);
+    } else {
+      this.props.updateTodo(changed);
+    }
   }
 
   isChanged = () =>
@@ -69,7 +88,7 @@ export default class TodoCard extends Component {
     this.props.todo.content !== this.state.originalTodo.content;
 
   close = () => {
-    this.props.done(this.props.todo);
+    this.setState({ titleActive: false, contentActive: false });
   };
 
   render() {
@@ -78,12 +97,9 @@ export default class TodoCard extends Component {
       <div
         ref={this.cardRef}
         className={`todo-card card${this.isActive() ? ' is-editing' : ''}${
-          this.props.checked ? ' is-checked' : ''
-        }${todo.hasBullets ? ' bullets-active' : ''}`}
+          todo.hasBullets ? ' bullets-active' : ''
+        }`}
         style={{ backgroundColor: todo.color || '#fff' }}>
-        {todo.id > 0 && (
-          <CheckButton toggleCheck={() => this.props.toggleCheck()} />
-        )}
         <TodoHeader
           name={todo.name}
           onChange={name => this.onChange({ ...todo, name: name })}
@@ -96,7 +112,7 @@ export default class TodoCard extends Component {
           setActive={state => this.setState({ contentActive: state })}
         />
         <TodoCardFooter
-          isChanged={this.isChanged()}
+          isChanged={this.isChanged() && !this.isNew()}
           toggleBullets={() => this.toggleBullets()}
           deleteTodo={() => this.props.deleteTodo(todo.id)}
           setColor={color => this.onChange({ ...todo, color: color })}
@@ -107,3 +123,4 @@ export default class TodoCard extends Component {
     );
   }
 }
+export default connect(mapStateToProps, mapDispatchToProps)(TodoCard);

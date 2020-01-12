@@ -1,5 +1,4 @@
 import * as Constants from '../action-types';
-import { UpdateObjectInArray, UpdateObject } from '../util';
 
 export const addTodo = payload => ({
   type: Constants.ADD_TODO,
@@ -16,46 +15,54 @@ export const deleteTodo = payload => ({
   payload
 });
 
-export const setColor = payload => ({
-  type: Constants.SET_COLOR,
+export const updateNewTodo = payload => ({
+  type: 'UPDATE_NEW_TODO',
   payload
 });
 
-const initialState = [
-  {
-    id: 1,
-    name: 'Shopping',
-    content:
-      '<ul><li>Chicken</li><li>Yogurt</li><li>Milk</li><li>Potatoes</ul>',
-    hasBullets: true
-  },
-  { id: 2, name: 'Book Hair Appointment', content: '<div>Soon!</div>' }
-];
-
-const AddTodo = (oldArray, newObject) => {
-  newObject.id = oldArray.length + 2;
-  return [newObject].concat(oldArray);
-};
-
-const UpdateTodo = (state, todo) =>
-  UpdateObjectInArray(state, todo.id, oldItem => UpdateObject(oldItem, todo));
-const DeleteTodo = (state, itemId) => state.filter(todo => todo.id !== itemId);
-const SetColor = (state, todo) => {
-  return UpdateObjectInArray(state, todo.id, oldItem => {
-    return UpdateObject(oldItem, { color: todo.hex });
-  });
+const initialState = {
+  list: [
+    {
+      id: 1,
+      name: 'Shopping',
+      content:
+        '<ul><li>Chicken</li><li>Yogurt</li><li>Milk</li><li>Potatoes</ul>',
+      hasBullets: true
+    },
+    { id: 2, name: 'Book Hair Appointment', content: '<div>Soon!</div>' }
+  ],
+  newTodo: { name: '', content: '', id: 0 }
 };
 
 const todos = (state = initialState, action) => {
   switch (action.type) {
     case Constants.ADD_TODO:
-      return AddTodo(state, action.payload);
+      action.payload.id =
+        state.list.reduce((a, b) => (a > b.id ? a : b.id), 0) + 1;
+      return {
+        ...state,
+        list: [action.payload, ...state.list],
+        newTodo: { name: '', content: '', id: 0 }
+      };
+
     case Constants.UPDATE_TODO:
-      return UpdateTodo(state, action.payload);
+      let newList = state.list.map(item =>
+        item.id === action.payload.id ? action.payload : item
+      );
+      return { ...state, list: newList };
+
     case Constants.DELETE_TODO:
-      return DeleteTodo(state, action.payload);
-    case Constants.SET_COLOR:
-      return SetColor(state, action.payload);
+      if (action.payload === 0) {
+        return { ...state, newTodo: { name: '', content: '', id: 0 } };
+      }
+      return {
+        ...state,
+        list: state.list.filter(todo => todo.id !== action.payload)
+      };
+
+    case 'UPDATE_NEW_TODO':
+      return { ...state, newTodo: action.payload };
+
     default:
       return state;
   }
